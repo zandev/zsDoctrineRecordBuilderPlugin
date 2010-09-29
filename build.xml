@@ -12,6 +12,8 @@
 	<property name="lib.dir" value="${basedir}/lib"/>
 	<property name="test.dir" value="${basedir}/test"/>
 	<property name="test.bootstrap.dir" value="${test.dir}/bootstrap"/>
+	<property name="test.mock.dir" value="${test.dir}/mock"/>
+	<property name="test.mock.lib.dir" value="${test.mock.dir}/lib"/>
 	<property name="report.dir" value="${basedir}/report"/>
 	<property name="report.coverage.dir" value="${report.dir}/coverage"/>
 	<property name="report.testdox.dir" value="${report.dir}/testdox"/>
@@ -27,6 +29,7 @@
 	<!-- ******************** -->
 	
 	<target name="init">
+	  <delete dir="${test.mock.lib.dir}/base" />
   	<mkdir dir="${report.coverage.dir}"/>
   	<mkdir dir="${report.testdox.dir}"/>
 	  <touch file="${report.testdox.file}"/>

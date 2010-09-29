@@ -9,16 +9,19 @@ sfContext::createInstance($configuration);
 
 $databaseManager = new sfDatabaseManager($configuration);
 
-$cached_fixtures = sfConfig::get('sf_app_cache_dir') . '/test/fixtures/zsDoctrineRecordBuilder.yml';
+Doctrine_Core::dropDatabases();
+Doctrine_Core::createDatabases();
+Doctrine_Core::generateModelsFromYaml(__DIR__ . '/../mock/config/doctrine/schema.yml', __DIR__ . '/../mock/lib/model', array('baseClassesDirectory' => 'base'));
 
-if (! file_exists($cached_fixtures)) {
-  if (! is_dir($dir = dirname($cached_fixtures))) {
-    $fs = new sfFilesystem();
-    $fs->mkdirs($dir);
+function load_doctrine_base_classes($className){
+  $file = __DIR__ . '/../mock/lib/model/base/' . "$className.php";
+  if(file_exists($file))
+  {
+    require_once $file;
+    return true;
   }
-  $fh = fopen($cached_fixtures, 'w');
-  fwrite($fh, 
-  sfYaml::dump(sfYaml::load(sfConfig::get('sf_plugins_dir') . '/zsDoctrineRecordBuilder/test/fixtures/fixtures.yml'), 4));
-  fclose($fh);
 }
-Doctrine_Core::loadData($cached_fixtures);
+
+spl_autoload_register('load_doctrine_base_classes');
+
+Doctrine_Core::createTablesFromModels(__DIR__ . '/../mock/lib/model');

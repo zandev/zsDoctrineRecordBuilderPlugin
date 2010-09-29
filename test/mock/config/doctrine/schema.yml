@@ -1,0 +1,45 @@
+---
+# schema.yml from http://www.doctrine-project.org/projects/orm/1.2/docs/manual/working-with-models/en#define-test-schema
+
+User:
+  columns:
+    username: string(255)
+    password: string(255)
+  relations:
+    Groups:
+      class: Group
+      local: user_id
+      foreign: group_id
+      refClass: UserGroup
+      foreignAlias: Users
+
+Email:
+  columns:
+    user_id: integer
+    address: string(255)
+  relations:
+    User:
+      foreignType: one
+
+Phonenumber:
+  columns:
+    user_id: integer
+    phonenumber: string(255)
+    primary_num: boolean
+  relations:
+    User:
+      foreignAlias: Phonenumbers
+
+Group:
+  tableName: groups
+  columns:
+    name: string(255)
+
+UserGroup:
+  columns:
+    user_id:
+      type: integer
+      primary: true
+    group_id:
+      type: integer
+      primary: true
