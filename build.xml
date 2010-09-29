@@ -1,0 +1,49 @@
+<project name="zsDoctrineRecordBuilder" default="test">
+	
+	<!-- ******************** -->
+	<!--     PROPERTIES       -->
+	<!-- ******************** -->
+	
+	<!-- DIRECTORIES -->
+	<property name="config.dir" value="${basedir}/config"/>
+	<property name="lib.dir" value="${basedir}/lib"/>
+	<property name="test.dir" value="${basedir}/test"/>
+	<property name="report.dir" value="${basedir}/report"/>
+	<property name="report.coverage.dir" value="${report.dir}/covergage"/>
+	<property name="report.testdox.dir" value="${report.dir}/testdox"/>
+	
+	<!-- FILES -->
+	<property name="report.testdox.file" value="${report.testdox.dir}/index.html"/>
+	<property name="phpunit.bootstrap.file" value="${test.dir}/Bootstrap.phpunit.php" />
+	
+	
+	
+	<!-- ******************** -->
+	<!--       TARGETS        -->
+	<!-- ******************** -->
+	
+	<target name="init">
+		<mkdir dir="${report.coverage.dir}"/>
+		<mkdir dir="${report.testdox.dir}"/>
+	  <touch file="${report.testdox.file}"/>
+	</target>
+	
+  <target name="test" depends="init">
+  	<exec executable="phpunit" failonerror="true">
+  		<arg value="--bootstrap=${phpunit.bootstrap.file}"/>
+  		<arg value="--colors" />
+  		<arg value="${test.dir}"/>
+  	</exec>
+  </target>
+	
+	<target name="report" depends="init">
+    <exec executable="phpunit" failonerror="true">
+      <arg value="--bootstrap=${phpunit.bootstrap.file}"/>
+      <arg value="--colors" />
+    	<arg value="--coverage-html=${report.dir}/coverage"/>
+    	<arg value="--testdox-html=${report.testdox.file}"/>
+      <arg value="${test.dir}"/>
+    </exec>
+  </target>
+	
+</project>
