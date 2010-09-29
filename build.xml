@@ -9,7 +9,7 @@
 	<property name="lib.dir" value="${basedir}/lib"/>
 	<property name="test.dir" value="${basedir}/test"/>
 	<property name="report.dir" value="${basedir}/report"/>
-	<property name="report.coverage.dir" value="${report.dir}/covergage"/>
+	<property name="report.coverage.dir" value="${report.dir}/coverage"/>
 	<property name="report.testdox.dir" value="${report.dir}/testdox"/>
 	
 	<!-- FILES -->
