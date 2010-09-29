@@ -6,26 +6,48 @@ class zsRecordBuilderDescriptionProvider
   {
     return array(
       array(
-        'model'   => 'User', 
-        'name'    => 'stephane', 
-        'attributes' => array(
-          'username'  => 'zanshine',
-          'firstname' => 'stephane',
-          'lastname'  => 'richard',
+        'model'         => 'User', 
+        'name'          => 'stephane', 
+        'attributes'    => array(
+          'username'      => 'zanshine',
+          'firstname'     => 'stephane',
+          'lastname'      => 'richard',
         ),
         'relations' => array(
-          'group'     => 'admin',
-          'email'     => 'stephane@zanshine.com'
+          'Groups'        => 'admin',
+          'Emails'        => 'stephane-mail',
+          'Phonenumbers'  => 'stephane-phone',
         ),
       ),
       array(
-        'model'   => 'Email', 
-        'name'    => 'stephane@zanshine.com', 
-        'attributes' => array(
-          'address'  => 'stephane@zanshine.com',
+        'model'         => 'Email', 
+        'name'          => 'stephane-mail', 
+        'attributes'    => array(
+          'address'       => 'stephane@zanshine.com',
         ),
-        'relations' => array(
-          'user'     => 'stephane',
+        'relations'     => array(
+          'user'          => 'stephane',
+        ),
+      ),
+      array(
+        'model'         => 'Phonenumber', 
+        'name'          => 'stephane-phone', 
+        'attributes'    => array(
+          'phonenumber'   => '00 33 385 234 567',
+          'primary_num'   => false,
+        ),
+        'relations'     => array(
+          'User'          => 'stephane',
+        ),
+      ),
+      array(
+        'model'         => 'Group', 
+        'name'          => 'admin', 
+        'attributes'    => array(
+          'name'          => 'administrator',
+        ),
+        'relations'     => array(
+          'Users'         => 'stephane',
         ),
       ),
     );
