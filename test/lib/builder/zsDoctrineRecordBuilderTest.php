@@ -17,7 +17,7 @@ class zsDoctrineRecordBuilderTest extends PHPUnit_Framework_TestCase
   }
   
   /**
-   * @testdox test api
+   * @testdox addBuilder() api example
    */
   public function addBuilderAPI()
   {
@@ -34,6 +34,15 @@ class zsDoctrineRecordBuilderTest extends PHPUnit_Framework_TestCase
       )
     ));
     $this->assertTrue(true);
+  }
+  
+  /**
+   * @testdox addBuilder() return an instance of zsDoctrineBuilder
+   */
+  public function addBuilderReturnBuilderInstance()
+  {
+    $r =  zsDoctrineRecordBuilder::addBuilder();
+    $this->assertEquals(get_class($r), 'zsDoctrineBuilder');
   }
 }
 

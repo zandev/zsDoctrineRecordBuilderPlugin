@@ -3,7 +3,7 @@
 class zsDoctrineRecordBuilder
 {
 
-  public function addBuilder()
+  public static function addBuilder()
   {
     
   }
