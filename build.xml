@@ -8,13 +8,14 @@
 	<property name="config.dir" value="${basedir}/config"/>
 	<property name="lib.dir" value="${basedir}/lib"/>
 	<property name="test.dir" value="${basedir}/test"/>
+	<property name="test.bootstrap.dir" value="${test.dir}/bootstrap"/>
 	<property name="report.dir" value="${basedir}/report"/>
 	<property name="report.coverage.dir" value="${report.dir}/coverage"/>
 	<property name="report.testdox.dir" value="${report.dir}/testdox"/>
 	
 	<!-- FILES -->
 	<property name="report.testdox.file" value="${report.testdox.dir}/index.html"/>
-	<property name="phpunit.bootstrap.file" value="${test.dir}/Bootstrap.phpunit.php" />
+	<property name="phpunit.bootstrap.file" value="${test.bootstrap.dir}/unit.php" />
 	
 	
 	
@@ -23,8 +24,8 @@
 	<!-- ******************** -->
 	
 	<target name="init">
-		<mkdir dir="${report.coverage.dir}"/>
-		<mkdir dir="${report.testdox.dir}"/>
+  	<mkdir dir="${report.coverage.dir}"/>
+  	<mkdir dir="${report.testdox.dir}"/>
 	  <touch file="${report.testdox.file}"/>
 	</target>
 	
