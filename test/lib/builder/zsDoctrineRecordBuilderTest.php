@@ -7,7 +7,17 @@ require_once 'PHPUnit/Framework/TestCase.php';
  */
 class zsDoctrineRecordBuilderTest extends PHPUnit_Framework_TestCase
 {
-
+  /**
+   * 
+   * @var zsRecordBuilder
+   */
+  private $builder;
+  
+  protected function setUp()
+  {
+    $this->builder = new zsDoctrineRecordBuilder();
+  }
+  
   /**
    * @testdox doctrine is loaded
    */
@@ -21,7 +31,7 @@ class zsDoctrineRecordBuilderTest extends PHPUnit_Framework_TestCase
    */
   public function addBuilderAPI()
   {
-    zsDoctrineRecordBuilder::addBuilder(array(
+    $this->builder->addBuilder(array(
       'name' => 'stephane',
       'model' => 'User',
       'attributes' => array(
@@ -41,8 +51,65 @@ class zsDoctrineRecordBuilderTest extends PHPUnit_Framework_TestCase
    */
   public function addBuilderReturnBuilderInstance()
   {
-    $r =  zsDoctrineRecordBuilder::addBuilder();
-    $this->assertEquals(get_class($r), 'zsDoctrineBuilder');
+    $r =  $this->builder->addBuilder(array('model' => 'User', 'name' => 'stephane'));
+    $this->assertType('zsRecordBuilder', $r);
+  }
+  
+  /**
+   * @testdox addBuilder()shoudl register the builder
+   */
+  public function addBuilderRegisterTheBuilderInstance()
+  {
+    $r = $this->builder->addBuilder(array('name' => 'stephane', 'model' => 'User'));
+    $this->assertTrue(in_array($r, $this->builder->getBuilders()));
+  }
+  
+  /**
+   * @testdox after a call to addBuilder(), getBuilder('name') should return the correct instance
+   */
+  public function getBuilderReturnTheCorrectBuilder()
+  {
+    $r = $this->builder->addBuilder(array('name' => 'stephane', 'model' => 'User'));
+    $this->assertEquals($r, $this->builder->getBuilder('stephane'));
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
