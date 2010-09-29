@@ -61,16 +61,9 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
   
   public static function buildedInstanceMatchSpecifiedAttributesProvider()
   {
-    return array(
-      array(array(
-        'model' => 'User', 
-        'name' => 'stephane', 
-        'attributes' => array(
-          'username' => 'zanshine',
-          'firstname' => 'stephane',
-          'lastname' => 'richard',
-      ))),
-    );
+    return array_map(function (array $d){
+      return array($d, new zsRecordBuilderDescription($d));
+    }, zsRecordBuilderDescriptionProvider::getValidDescriptionsWithAttributes());
   }
    
    

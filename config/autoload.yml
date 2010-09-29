@@ -1,0 +1,5 @@
+autoload:
+  zsDoctrineRecordBuilderPlugin:
+    name:           zsDoctrineRecordBuilderPlugin
+    path:           %SF_PLUGINS_DIR%/zsDoctrineRecordBuilderPlugin
+    recursive:      true
