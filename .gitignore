@@ -2,3 +2,4 @@
 .project
 .settings
 report
+test/bootstrap/properties.php

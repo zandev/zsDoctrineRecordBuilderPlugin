@@ -1,8 +1,8 @@
 <?php
-
+include_once __DIR__ . '/properties.php';
 require_once __DIR__ . '/../../../../config/ProjectConfiguration.class.php';
 
-$app = sfConfig::get('app_test_application', 'frontend');
+$app = isset($app) ? $app : 'frontend';
 
 $configuration = ProjectConfiguration::getApplicationConfiguration($app, 'test', isset($debug) ? $debug : true);
 sfContext::createInstance($configuration);
@@ -18,7 +18,7 @@ if (! file_exists($cached_fixtures)) {
   }
   $fh = fopen($cached_fixtures, 'w');
   fwrite($fh, 
-  sfYaml::dump(sfYaml::load(sfConfig::get('sf_plugins_dir') . '/mhSimpleCatalogPlugin/test/fixtures/fixtures.yml'), 4));
+  sfYaml::dump(sfYaml::load(sfConfig::get('sf_plugins_dir') . '/zsDoctrineRecordBuilder/test/fixtures/fixtures.yml'), 4));
   fclose($fh);
 }
 Doctrine_Core::loadData($cached_fixtures);

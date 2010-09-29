@@ -4,6 +4,9 @@
 	<!--     PROPERTIES       -->
 	<!-- ******************** -->
 	
+	<!-- PROPERTIES -->
+	<property name="sf.application.name" value="test"/>
+	
 	<!-- DIRECTORIES -->
 	<property name="config.dir" value="${basedir}/config"/>
 	<property name="lib.dir" value="${basedir}/lib"/>
@@ -44,6 +47,7 @@
     	<arg value="--coverage-html=${report.dir}/coverage"/>
     	<arg value="--testdox-html=${report.testdox.file}"/>
       <arg value="${test.dir}"/>
+    	<arg value="${sf.application.name}"/>
     </exec>
   </target>
 	
