@@ -44,6 +44,36 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
       array('Email'),
     );
   }
+  
+  /**
+   * @testdox the builded instance should match specified attributes passed to the contructor
+   * @dataProvider buildedInstanceMatchSpecifiedAttributesProvider
+   */
+  public function buildedInstanceMatchSpecifiedAttributes($description)
+  {
+    $builder = new zsRecordBuilder($description);
+    
+    $record = $builder->build();
+    foreach ($description['attributes'] as $attr => $value) {
+    	$this->assertEquals($value, $record->$attr);
+    }
+  }
+  
+  public static function buildedInstanceMatchSpecifiedAttributesProvider()
+  {
+    return array(
+      array(array(
+        'model' => 'User', 
+        'name' => 'stephane', 
+        'attributes' => array(
+          'username' => 'zanshine',
+          'firstname' => 'stephane',
+          'lastname' => 'richard',
+      ))),
+    );
+  }
+   
+   
    
    
    

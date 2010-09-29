@@ -60,7 +60,7 @@ class zsRecordBuilderDescription
 
   public function getAttributes ()
   {
-    return $this->attributes;
+    return (array) $this->attributes;
   }
 
   private $relations;
@@ -74,7 +74,7 @@ class zsRecordBuilderDescription
 
   public function getRelations ()
   {
-    return $this->relations;
+    return (array) $this->relations;
   }
 
   public function __set ($property, $value)

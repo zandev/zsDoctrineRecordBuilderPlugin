@@ -16,8 +16,14 @@ class zsRecordBuilder
 
   public function build ()
   {
-    $model = $this->description->getModel();
-    return new $model();
+    $class = $this->description->getModel();
+    $model = new $class();
+    
+    foreach ($this->description->getAttributes() as $attr => $value) {
+    	$model->$attr = $value;
+    }
+    
+    return $model;
   }
 
   public function __set ($property, $value)

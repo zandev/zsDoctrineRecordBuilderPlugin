@@ -4,6 +4,8 @@
 User:
   columns:
     username: string(255)
+    firstname: string(255)
+    lastname: string(255)
     password: string(255)
   relations:
     Groups:

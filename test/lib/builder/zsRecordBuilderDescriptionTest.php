@@ -7,49 +7,84 @@ require_once 'PHPUnit/Framework/TestCase.php';
  */
 class zsRecordBuilderDescriptionTest extends PHPUnit_Framework_TestCase
 {
-
+  
+  public static function zsRecordBuilderDescriptionProvider()
+  {
+    $descriptions = array(
+      array(
+        'model'   => 'User', 
+        'name'    => 'stephane', 
+        'attributes' => array(
+          'username'  => 'zanshine',
+          'firstname' => 'stephane',
+          'lastname'  => 'richard',
+        ),
+        'relations' => array(
+          'group'     => 'admin',
+          'email'     => 'stephane@zanshine.com'
+        ),
+      ),
+      array(
+        'model'   => 'Email', 
+        'name'    => 'stephane@zanshine.com', 
+        'attributes' => array(
+          'address'  => 'stephane@zanshine.com',
+        ),
+        'relations' => array(
+          'user'     => 'stephane',
+        ),
+      ),
+    );
+    
+    return array_map(function (array $d){
+    	return array($d, new zsRecordBuilderDescription($d));
+    }, $descriptions);
+    
+  }
+  
   /**
    * @testdox __construct() accept an array, containing at least keys 'model' and 'name'
+   * @dataProvider zsRecordBuilderDescriptionProvider
    */
-  public function constructAcceptAnArrayWithModelAndName ()
+  public function constructAcceptAnArrayWithModelAndName (array $data, zsRecordBuilderDescription $description) 
   {
-    $d = new zsRecordBuilderDescription(array('model' => 'User', 'name' => 'stephane'));
     $this->assertTrue(true);
   }
 
   /**
-   * Tests zsRecordBuilderDescription->getModel()
+   * @testdox zsRecordBuilderDescription->getModel() OK
+   * @dataProvider zsRecordBuilderDescriptionProvider
    */
-  public function getModelOK ()
+  public function getModelOK (array $data, zsRecordBuilderDescription $description) 
   {
+    $this->assertEquals($data['model'], $description->getModel());
   }
 
   /**
-   * Tests zsRecordBuilderDescription->getName()
+   * @testdox zsRecordBuilderDescription->getName() OK
+   * @dataProvider zsRecordBuilderDescriptionProvider
    */
-  public function getNameOK ()
+  public function getNameOK (array $data, zsRecordBuilderDescription $description) 
   {
+    $this->assertEquals($data['name'], $description->getName());
   }
 
   /**
-   * Tests zsRecordBuilderDescription->getAttributes()
+   * @testdox zsRecordBuilderDescription->getAttributes() OK
+   * @dataProvider zsRecordBuilderDescriptionProvider
    */
-  public function getAttributesOK ()
+  public function getAttributesOK (array $data, zsRecordBuilderDescription $description) 
   {
+    $this->assertEquals($data['attributes'], $description->getAttributes());
   }
 
   /**
-   * Tests zsRecordBuilderDescription->getRelations()
+   * @testdox zsRecordBuilderDescription->getRelations() OK
+   * @dataProvider zsRecordBuilderDescriptionProvider
    */
-  public function getRelationsOK ()
+  public function getRelationsOK (array $data, zsRecordBuilderDescription $description) 
   {
-  }
-
-  /**
-   * Tests zsRecordBuilderDescription->__set()
-   */
-  public function test__setOK ()
-  {
+    $this->assertEquals($data['relations'], $description->getRelations());
   }
 
 }
