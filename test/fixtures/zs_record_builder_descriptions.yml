@@ -1,0 +1,157 @@
+valid descriptions with attributes:
+  stephane:
+    model: User 
+    attributes: 
+      username: zanshine
+      firstname: stephane
+      lastname: richard
+
+  stephane mail:
+    model: Email 
+    attributes: 
+      address: stephane@zanshine.com
+
+  stephane phone:
+    model: Phonenumber 
+    attributes: 
+      phonenumber: 00 33 385 234 567
+      primary_num: false
+
+  admin:
+    model: Group 
+    attributes: 
+      name: administrator
+
+valid descriptions with relations:
+  stephane:
+    model: User 
+    attributes: 
+      username: zanshine
+      firstname: stephane
+      lastname: richard
+    relations: 
+      Groups: admin
+      Emails: stephane mail
+      Phonenumbers: stephane phone
+
+  stephane mail:
+    model: Email 
+    attributes: 
+      address: stephane@zanshine.com
+    relations: 
+      User: stephane
+
+  stephane phone:
+    model: Phonenumber 
+    attributes: 
+      phonenumber: 00 33 385 234 567
+      primary_num: false
+    relations: 
+      User: stephane
+
+  admin:
+    model: Group 
+    attributes: 
+    administrator:
+    relations: 
+      Users: stephane
+
+valid descriptions with one to one relation:
+  stephane:
+    model: Person 
+    attributes: 
+      firstname: stephane
+      lastname: richard
+    relations: 
+      Phonenumber: stephane phone
+      FirstFriend: nicolas
+      SecondFriend: alex
+
+  bob:
+    model: Person 
+    attributes: 
+      firstname: bob
+      lastname: éponge
+    relations: 
+      Phonenumber: bob phone
+      FirstFriend: nicolas
+      SecondFriend: alex
+
+  nicolas:
+    model: Friend 
+    attributes: 
+      firstname: nicolas
+      lastname: karsozy
+      is_cool: false
+
+  alex:
+    model: Friend 
+    attributes: 
+      firstname: alex
+      lastname: cciabotti
+      is_cool: true
+
+  stephane mail:
+    model: Email 
+    attributes: 
+      address: stephane@zanshine.com
+    relations: 
+      Person: stephane
+
+  bob mail:
+    model: Email 
+    attributes: 
+      address: bob@live.com
+    relations: 
+      Person: bob
+
+  stephane phone:
+    model: Phonenumber 
+    attributes: 
+      phonenumber: 00 33 385 234 567
+      primary_num: false
+    relations: 
+      Person: stephane
+
+  bob phone:
+    model: Phonenumber 
+    attributes: 
+      phonenumber: 00 33 385 234 567
+      primary_num: false
+    relations: 
+      Person: bob
+
+valid descriptions for many relation with one builder:
+  stephane:
+    model: User
+    attributes: 
+      firstname: stephane
+    relations: 
+      Groups: admin
+      Phonenumbers: stephane phone
+      Friends: alex
+
+  admin:
+    model: Group 
+    attributes: 
+    administrator:
+    relations: 
+      Users: stephane
+
+  stephane phone:
+    model: Phonenumber 
+    attributes: 
+      phonenumber: 00 33 385 234 567
+      primary_num: false
+
+  stephane mail:
+    model: Email 
+    attributes: 
+      address: stephane@zanshine.com
+
+  alex:
+    model: Friend 
+    attributes: 
+      firstname: alex
+      lastname: cciabotti
+      is_cool: true

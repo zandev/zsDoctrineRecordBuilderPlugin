@@ -59,7 +59,8 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
     $builder = new zsRecordBuilder($data);
     $record = $builder->build();
     
-    foreach ($description->getAttributes() as $attr => $value) {
+    foreach ($description->getAttributes() as $attr => $value)
+    {
     	$this->assertEquals($value, $record->$attr);
     }
   }
@@ -157,6 +158,34 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
     }, 
     zsRecordBuilderDescriptionProvider::getValidDescriptionsForManyRelationWithOneBuilder()));
   }
+  
+  /**
+   * @_testdox when building a relation for a collection, it should accept several builders references
+   * @dataProvider buildingManyAcceptManyBuildersProvider
+   */
+  public function buildingManyAcceptManyBuilders(array $data, zsRecordBuilderDescription $description)
+  {
+    
+  }
+  
+  public function _testBuildingManyAcceptManyBuildersProvider()
+  {
+    $this->assertTrue(count($this->buildingManyAcceptManyBuildersProvider()) > 0);
+  }
+  
+  public static function buildingManyAcceptManyBuildersProvider()
+  {
+    return array_filter(array_map(function (array $d)
+    {
+      if(@$d['relations'])
+      {
+        return array($d, new zsRecordBuilderDescription($d));
+      }
+    }, 
+    zsRecordBuilderDescriptionProvider::getValidDescriptionsForManyRelationWithManyBuilders()));
+  }
+   
+   
    
    
    
