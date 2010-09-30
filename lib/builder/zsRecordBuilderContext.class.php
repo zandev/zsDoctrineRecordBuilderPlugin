@@ -5,6 +5,9 @@ final class zsRecordBuilderContext
   
   private static $defaultInstance;
   
+  /**
+   * @return zsRecordBuilderContext
+   */
   public static function getInstance()
   {
     return self::$defaultInstance ? self::$defaultInstance : new self();
@@ -37,7 +40,12 @@ final class zsRecordBuilderContext
   {
     return $this->builders;
   }
-
+  
+  /**
+   * 
+   * @param string $name
+   * @return zsRecordBuilder
+   */
   public function getBuilder ($name)
   {
     if (empty($name)) {
@@ -47,6 +55,11 @@ final class zsRecordBuilderContext
     if ($b = @$this->builders[$name]) {
       return $b;
     }
+  }
+  
+  public function cleanBuilders()
+  {
+    $this->builders = array();
   }
 
   public function __set ($property, $value)

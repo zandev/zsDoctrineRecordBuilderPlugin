@@ -91,50 +91,93 @@ class zsRecordBuilderDescriptionProvider
   }
   
   
-  public static function getValidDescriptionsWithOneRelation()
+  public static function getValidDescriptionsWithOneToOneRelation()
   {
     return array(
       array(
-        'model'         => 'User', 
         'name'          => 'stephane', 
+        'model'         => 'Person', 
         'attributes'    => array(
-          'username'      => 'zanshine',
           'firstname'     => 'stephane',
           'lastname'      => 'richard',
         ),
         'relations' => array(
-          'Groups'        => 'admin',
+          'Phonenumber'        => 'stephane-phone',
+          'FirstFriend'        => 'nicolas',
+          'SecondFriend'       => 'alex',
         ),
       ),
       array(
-        'model'         => 'Email', 
+        'name'          => 'bob', 
+        'model'         => 'Person', 
+        'attributes'    => array(
+          'firstname'     => 'bob',
+          'lastname'      => 'éponge',
+        ),
+        'relations' => array(
+          'Phonenumber'        => 'bob-phone',
+          'FirstFriend'        => 'nicolas',
+          'SecondFriend'       => 'alex',
+        ),
+      ),
+      array(
+        'name'          => 'nicolas', 
+        'model'         => 'Friend', 
+        'attributes'    => array(
+          'firstname'     => 'nicolas',
+          'lastname'      => 'karsozy',
+          'is_cool'        => false,
+        ),
+      ),
+      array(
+        'name'          => 'alex', 
+        'model'         => 'Friend', 
+        'attributes'    => array(
+          'firstname'     => 'alex',
+          'lastname'      => 'cciabotti',
+          'is_cool'        => true,
+        ),
+      ),
+      array(
         'name'          => 'stephane-mail', 
+        'model'         => 'Email', 
         'attributes'    => array(
           'address'       => 'stephane@zanshine.com',
         ),
         'relations'     => array(
-          'user'          => 'stephane',
+          'Person'          => 'stephane',
         ),
       ),
       array(
-        'model'         => 'Phonenumber', 
+        'name'          => 'bob-mail', 
+        'model'         => 'Email', 
+        'attributes'    => array(
+          'address'       => 'bob@live.com',
+        ),
+        'relations'     => array(
+          'Person'          => 'bob',
+        ),
+      ),
+      array(
         'name'          => 'stephane-phone', 
+        'model'         => 'Phonenumber', 
         'attributes'    => array(
           'phonenumber'   => '00 33 385 234 567',
           'primary_num'   => false,
         ),
         'relations'     => array(
-          'User'          => 'stephane',
+          'Person'          => 'stephane',
         ),
       ),
       array(
-        'model'         => 'Group', 
-        'name'          => 'admin', 
+        'name'          => 'bob-phone', 
+        'model'         => 'Phonenumber', 
         'attributes'    => array(
-          'name'          => 'administrator',
+          'phonenumber'   => '00 33 385 234 567',
+          'primary_num'   => false,
         ),
         'relations'     => array(
-          'Users'         => 'stephane',
+          'Person'          => 'bob',
         ),
       ),
     );

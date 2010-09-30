@@ -1,36 +1,39 @@
----
-# schema.yml from http://www.doctrine-project.org/projects/orm/1.2/docs/manual/working-with-models/en#define-test-schema
-
 User:
   columns:
-    username: string(255)
+    username:  string(255)
     firstname: string(255)
-    lastname: string(255)
-    password: string(255)
+    lastname:  string(255)
+    password:  string(255)
   relations:
     Groups:
-      class: Group
-      local: user_id
+      class:   Group
+      local:   user_id
       foreign: group_id
       refClass: UserGroup
       foreignAlias: Users
 
 Email:
   columns:
-    user_id: integer
-    address: string(255)
+    user_id:   integer
+    person_id:   integer
+    address:   string(255)
   relations:
     User:
+      foreignType: one
+    Person:
       foreignType: one
 
 Phonenumber:
   columns:
-    user_id: integer
+    user_id:   integer
+    person_id:   integer
     phonenumber: string(255)
     primary_num: boolean
   relations:
     User:
       foreignAlias: Phonenumbers
+    Person:
+      foreignType: one
 
 Group:
   tableName: groups
@@ -45,3 +48,27 @@ UserGroup:
     group_id:
       type: integer
       primary: true
+      
+Person:
+  columns:
+    firstname: string(255)
+    lastname:  string(255)
+    adress:    string(255)
+    first_friend_id: integer
+    second_friend_id: integer
+  relations:
+    FirstFriend:
+      class: Friend
+      local: first_friend_id
+      foreignType : one
+    SecondFriend:
+      class: Friend
+      local: second_friend_id
+      foreignType : one
+    
+Friend:
+  columns:
+    is_cool:   boolean
+    firstname: string(255)
+    lastname:  string(255)
+    

@@ -97,6 +97,22 @@ class zsRecordBuilderContextTest extends PHPUnit_Framework_TestCase
       $this->assertTrue($a == zsRecordBuilderContext::getInstance());
     }
   }
+  
+  /**
+   * @testdox cleanBuilders() remove all registered builders
+   */
+  public function cleanBuilders()
+  {
+    foreach (zsRecordBuilderDescriptionProvider::getValidDescriptionsWithAttributes() as $description) {
+      zsRecordBuilderContext::getInstance()->addBuilder($description);
+    }
+    
+    zsRecordBuilderContext::getInstance()->cleanBuilders();
+    
+    $this->assertEquals(0, count(zsRecordBuilderContext::getInstance()->getBuilders()));
+  }
+   
+   
    
    
 }

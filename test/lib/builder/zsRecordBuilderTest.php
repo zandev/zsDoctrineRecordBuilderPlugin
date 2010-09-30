@@ -8,6 +8,18 @@ require_once 'PHPUnit/Framework/TestCase.php';
 class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
 {
   
+  private function prepareOneToOneRelationsBuilders()
+  {
+    foreach (zsRecordBuilderDescriptionProvider::getValidDescriptionsWithOneToOneRelation() as $description) {
+      zsRecordBuilderContext::getInstance()->addBuilder($description);
+    }
+  }
+  
+  protected function tearDown()
+  {
+    zsRecordBuilderContext::getInstance()->cleanBuilders();
+  }
+  
   /**
    * @testdox __construct() accept an array as parameter
    */
@@ -68,29 +80,36 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
   
   
   /**
-   * @_testdox build() returned instance should have one relation properly builded
-   * @dataProvider buildedInstanceHaveOneRelationProvider
+   * @testdox build() returned instance should have relations properly builded for one to one relations
+   * @dataProvider buildedInstanceOkWithOneToOneProvider
    */
-  public function buildedInstanceHaveOneRelation($description)
+  public function buildedInstanceOkWithOneToOne($description)
   {
-    foreach (zsRecordBuilderDescriptionProvider::getValidDescriptionsWithOneRelation() as $description) {
-      zsRecordBuilderContext::getInstance()->addBuilder($description);
-    }
+    $this->prepareOneToOneRelationsBuilders();
     
     $builder = new zsRecordBuilder($description);
     $record = $builder->build();
     
     foreach ($description['relations'] as $relation => $builderName) {
-      $expectedClass = get_class(new zsRecordBuilder($builderName));
-      $this->assertEquals($builderName, $record->$relation);
+      $expectedClass = get_class(zsRecordBuilderContext::getInstance()->getBuilder($builderName)->build());
+      
+      $this->assertType(Doctrine_Record, $record->$relation);
+      $this->assertType($expectedClass, $record->$relation);
     }
   }
   
-  public static function buildedInstanceHaveOneRelationProvider()
+  //testing the provider
+  public function testBuildedInstanceOkWithOneToOneProvider()
   {
-    return array_map(function (array $d){
-      return array($d, new zsRecordBuilderDescription($d));
-    }, zsRecordBuilderDescriptionProvider::getValidDescriptionsWithOneRelation());
+    $this->assertTrue(count($this->buildedInstanceMatchSpecifiedAttributesProvider()) > 0);
+  }
+  
+  public static function buildedInstanceOkWithOneToOneProvider()
+  {
+    return array_filter(array_map(function (array $d){
+      if(@$d['relations'])
+        return array($d, new zsRecordBuilderDescription($d));
+    }, zsRecordBuilderDescriptionProvider::getValidDescriptionsWithOneToOneRelation()));
   }
    
    

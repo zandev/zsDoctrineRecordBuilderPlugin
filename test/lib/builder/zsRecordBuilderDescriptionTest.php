@@ -57,6 +57,15 @@ class zsRecordBuilderDescriptionTest extends PHPUnit_Framework_TestCase
   {
     $this->assertEquals($data['attributes'], $description->getAttributes());
   }
+  
+  /**
+   * @testdox getAttributes() return an empty array for empty values
+   */
+  public function getAttributesReturnEmptyArray()
+  {
+    $d = new zsRecordBuilderDescription(array('name' => 'stephane', 'model' => 'User'));
+    $this->assertTrue(is_array($d->getAttributes()));
+  }
 
   /**
    * @testdox zsRecordBuilderDescription->getRelations() OK
@@ -65,6 +74,15 @@ class zsRecordBuilderDescriptionTest extends PHPUnit_Framework_TestCase
   public function getRelationsOK (array $data, zsRecordBuilderDescription $description) 
   {
     $this->assertEquals($data['relations'], $description->getRelations());
+  }
+  
+  /**
+   * @testdox getRelations() return an empty array for empty values
+   */
+  public function getRelationsReturnEmptyArray()
+  {
+    $d = new zsRecordBuilderDescription(array('name' => 'stephane', 'model' => 'User'));
+    $this->assertTrue(is_array($d->getRelations()));
   }
 
 }
