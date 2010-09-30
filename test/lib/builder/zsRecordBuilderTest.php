@@ -160,15 +160,36 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
   }
   
   /**
-   * @_testdox when building a relation for a collection, it should accept several builders references
+   * @testdox when building a relation for a collection, it should accept several builders references
    * @dataProvider buildingManyAcceptManyBuildersProvider
    */
   public function buildingManyAcceptManyBuilders(array $data, zsRecordBuilderDescription $description)
   {
+    //prepare
+    foreach (zsRecordBuilderDescriptionProvider::getValidDescriptionsForManyRelationWithManyBuilders() as $d)
+    {
+      zsRecordBuilderContext::getInstance()->addBuilder($d);
+    }
+    unset($d);
     
+    //
+    $builder = new zsRecordBuilder($data);
+    $record = $builder->build();
+    
+    foreach ($description->getRelations() as $relations)
+    {
+      $i = 0;
+      foreach ($relations as $relation => $builderName) 
+      {
+        ++$i;
+        $expectedClass = get_class(zsRecordBuilderContext::getInstance()->getBuilder($builderName)->build());
+        $this->assertType(Doctrine_Record, $record->$relations[$i]);
+        $this->assertType($expectedClass, $record->$relations[$i]);
+      }
+    }
   }
   
-  public function _testBuildingManyAcceptManyBuildersProvider()
+  public function testBuildingManyAcceptManyBuildersProvider()
   {
     $this->assertTrue(count($this->buildingManyAcceptManyBuildersProvider()) > 0);
   }

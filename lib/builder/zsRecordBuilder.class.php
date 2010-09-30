@@ -31,20 +31,36 @@ final class zsRecordBuilder
     
     if ($withRelations) 
     {
-      foreach ($this->description->getRelations() as $relation => $builderName)
+      foreach ($this->description->getRelations() as $relations => $references)
       {
-        if ($model->$relation instanceof Doctrine_Collection)
+        if(is_array($references))
         {
-          $model->$relation->add($this->context->getBuilder($builderName)->build(false));
-        } 
-        else 
-        {
-          $model->$relation = $this->context->getBuilder($builderName)->build(false);
+          foreach($references as $builderName)
+          {
+            $this->addRelation($model, $relations, $builderName);
+          }
+        }
+        else
+        {          
+          $this->addRelation($model, $relations, $references);
         }
       }
     }
     
     return $model;
+  }
+  
+  private function addRelation(Doctrine_Record $model, $relation, $builderName)
+  {
+    if ($model->$relation instanceof Doctrine_Collection)
+    {
+      $record = $this->context->getBuilder($builderName)->build(false);
+      $model->$relation->add($record, $builderName);
+    } 
+    else 
+    {
+      $model->$relation = $this->context->getBuilder($builderName)->build(false);
+    }
   }
 
   public function __set ($property, $value)
