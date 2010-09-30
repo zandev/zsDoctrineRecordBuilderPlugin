@@ -52,8 +52,8 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
   public function buildedInstanceMatchSpecifiedAttributes($description)
   {
     $builder = new zsRecordBuilder($description);
-    
     $record = $builder->build();
+    
     foreach ($description['attributes'] as $attr => $value) {
     	$this->assertEquals($value, $record->$attr);
     }
@@ -65,6 +65,35 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
       return array($d, new zsRecordBuilderDescription($d));
     }, zsRecordBuilderDescriptionProvider::getValidDescriptionsWithAttributes());
   }
+  
+  
+  /**
+   * @_testdox build() returned instance should have one relation properly builded
+   * @dataProvider buildedInstanceHaveOneRelationProvider
+   */
+  public function buildedInstanceHaveOneRelation($description)
+  {
+    foreach (zsRecordBuilderDescriptionProvider::getValidDescriptionsWithOneRelation() as $description) {
+      zsRecordBuilderContext::getInstance()->addBuilder($description);
+    }
+    
+    $builder = new zsRecordBuilder($description);
+    $record = $builder->build();
+    
+    foreach ($description['relations'] as $relation => $builderName) {
+      $expectedClass = get_class(new zsRecordBuilder($builderName));
+      $this->assertEquals($builderName, $record->$relation);
+    }
+  }
+  
+  public static function buildedInstanceHaveOneRelationProvider()
+  {
+    return array_map(function (array $d){
+      return array($d, new zsRecordBuilderDescription($d));
+    }, zsRecordBuilderDescriptionProvider::getValidDescriptionsWithOneRelation());
+  }
+   
+   
    
    
    

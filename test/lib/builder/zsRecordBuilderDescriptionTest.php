@@ -13,7 +13,13 @@ class zsRecordBuilderDescriptionTest extends PHPUnit_Framework_TestCase
     return array_map(function (array $d){
     	return array($d, new zsRecordBuilderDescription($d));
     }, zsRecordBuilderDescriptionProvider::getValidDescriptionsWithAttributes());
-    
+  }
+  
+  public static function zsRecordBuilderDescriptionWithRelationsProvider()
+  {
+    return array_map(function (array $d){
+      return array($d, new zsRecordBuilderDescription($d));
+    }, zsRecordBuilderDescriptionProvider::getValidDescriptionsWithRelations());
   }
   
   /**
@@ -54,7 +60,7 @@ class zsRecordBuilderDescriptionTest extends PHPUnit_Framework_TestCase
 
   /**
    * @testdox zsRecordBuilderDescription->getRelations() OK
-   * @dataProvider zsRecordBuilderDescriptionProvider
+   * @dataProvider zsRecordBuilderDescriptionWithRelationsProvider
    */
   public function getRelationsOK (array $data, zsRecordBuilderDescription $description) 
   {

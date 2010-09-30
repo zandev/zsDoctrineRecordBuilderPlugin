@@ -39,6 +39,7 @@
   	<exec executable="phpunit" failonerror="true">
   		<arg value="--bootstrap=${phpunit.bootstrap.file}"/>
   		<arg value="--colors" />
+  		<arg value="--verbose"/>
   		<arg value="${test.dir}"/>
   	</exec>
   </target>
@@ -50,7 +51,6 @@
     	<arg value="--coverage-html=${report.dir}/coverage"/>
     	<arg value="--testdox-html=${report.testdox.file}"/>
       <arg value="${test.dir}"/>
-    	<arg value="${sf.application.name}"/>
     </exec>
   </target>
 	

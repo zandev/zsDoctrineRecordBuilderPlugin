@@ -1,8 +1,22 @@
 <?php
 
-class zsDoctrineRecordBuilder
+final class zsRecordBuilderContext
 {
-
+  
+  private static $defaultInstance;
+  
+  public static function getInstance()
+  {
+    return self::$defaultInstance ? self::$defaultInstance : new self();
+  }
+  
+  public function __construct()
+  {
+    if(!self::$defaultInstance) {
+    	self::$defaultInstance = $this;
+    }
+  }
+  
   public function addBuilder (array $description)
   {
     $builder = new zsRecordBuilder($description);

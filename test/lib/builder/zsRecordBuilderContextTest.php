@@ -5,7 +5,7 @@ require_once 'PHPUnit/Framework/TestCase.php';
 /**
  * test case.
  */
-class zsDoctrineRecordBuilderTest extends PHPUnit_Framework_TestCase
+class zsRecordBuilderContextTest extends PHPUnit_Framework_TestCase
 {
   /**
    * 
@@ -15,7 +15,7 @@ class zsDoctrineRecordBuilderTest extends PHPUnit_Framework_TestCase
   
   protected function setUp()
   {
-    $this->builder = new zsDoctrineRecordBuilder();
+    $this->builder = new zsRecordBuilderContext();
   }
   
   /**
@@ -72,6 +72,33 @@ class zsDoctrineRecordBuilderTest extends PHPUnit_Framework_TestCase
     $r = $this->builder->addBuilder(array('name' => 'stephane', 'model' => 'User'));
     $this->assertEquals($r, $this->builder->getBuilder('stephane'));
   }
+  
+  /**
+   * @testdox getInstance() without any parameters always return the first created instance
+   */
+  public function getInstanceReturnTheDefaultInstance()
+  {
+    $a = zsRecordBuilderContext::getInstance();
+    
+    for ($i = 0; $i < 3; $i++) {
+    	$this->assertSame($a, zsRecordBuilderContext::getInstance());
+    }
+  }
+  
+  /**
+   * @testdox the first instanciated object is is always the default one for getInstance()
+   */
+  public function firstInstanceIsAlwaysTheDefault()
+  {
+    $a = new zsRecordBuilderContext();
+    
+    for ($i = 0; $i < 3; $i++) {
+      $b = new zsRecordBuilderContext();
+      $this->assertTrue($a == zsRecordBuilderContext::getInstance());
+    }
+  }
+   
+   
 }
 
 

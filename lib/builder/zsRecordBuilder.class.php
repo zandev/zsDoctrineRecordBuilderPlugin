@@ -9,7 +9,7 @@ class zsRecordBuilder
    */
   private $description;
 
-  public function __construct (array $description)
+  public function __construct (array $description, zsRecordBuilderContext $context = null)
   {
     $this->description = new zsRecordBuilderDescription($description);
   }
