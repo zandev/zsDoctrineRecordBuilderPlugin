@@ -63,7 +63,7 @@ class zsRecordBuilderDescriptionProvider
           'address'       => 'stephane@zanshine.com',
         ),
         'relations'     => array(
-          'user'          => 'stephane',
+          'User'          => 'stephane',
         ),
       ),
       array(
@@ -182,4 +182,98 @@ class zsRecordBuilderDescriptionProvider
       ),
     );
   }
+  
+  public static function getValidDescriptionsForManyRelationWithOneBuilder()
+  {
+    return array(
+      array(
+        'name' => 'stephane',
+        'model' => 'User',
+        'attributes'    => array(
+          'firstname'     => 'stephane',
+        ),
+        'relations' => array(
+          'Groups'        => 'admin',
+          'Phonenumbers'  => 'stephane-phone',
+          'Friends'        => 'alex',
+        ),
+      ),
+      array(
+        'model'         => 'Group', 
+        'name'          => 'admin', 
+        'attributes'    => array(
+          'name'          => 'administrator',
+        ),
+        'relations'     => array(
+          'Users'         => 'stephane',
+        ),
+      ),
+      array(
+        'model'         => 'Phonenumber', 
+        'name'          => 'stephane-phone', 
+        'attributes'    => array(
+          'phonenumber'   => '00 33 385 234 567',
+          'primary_num'   => false,
+        ),
+      ),
+      array(
+        'model'         => 'Email', 
+        'name'          => 'stephane-mail', 
+        'attributes'    => array(
+          'address'       => 'stephane@zanshine.com',
+        ),
+      ),
+      array(
+        'name'          => 'alex', 
+        'model'         => 'Friend', 
+        'attributes'    => array(
+          'firstname'     => 'alex',
+          'lastname'      => 'cciabotti',
+          'is_cool'        => true,
+        ),
+      ),
+    );
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

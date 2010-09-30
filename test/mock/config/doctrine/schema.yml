@@ -15,8 +15,8 @@ User:
 Email:
   columns:
     user_id:   integer
-    person_id:   integer
     address:   string(255)
+    person_id:   integer
   relations:
     User:
       foreignType: one
@@ -26,9 +26,9 @@ Email:
 Phonenumber:
   columns:
     user_id:   integer
-    person_id:   integer
     phonenumber: string(255)
     primary_num: boolean
+    person_id:   integer
   relations:
     User:
       foreignAlias: Phonenumbers
@@ -60,15 +60,19 @@ Person:
     FirstFriend:
       class: Friend
       local: first_friend_id
-      foreignType : one
+      foreignType: one
     SecondFriend:
       class: Friend
       local: second_friend_id
-      foreignType : one
+      foreignType: one
     
 Friend:
   columns:
     is_cool:   boolean
     firstname: string(255)
     lastname:  string(255)
+    user_id: integer
+  relations:
+    User:
+      foreignAlias: Friends
     

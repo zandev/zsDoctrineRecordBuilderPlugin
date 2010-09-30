@@ -24,14 +24,23 @@ final class zsRecordBuilder
     $class = $this->description->getModel();
     $model = new $class();
     
-    foreach ($this->description->getAttributes() as $attr => $value) {
+    foreach ($this->description->getAttributes() as $attr => $value) 
+    {
     	$model->$attr = $value;
     }
     
-    if($withRelations)
+    if ($withRelations) 
     {
-      foreach ($this->description->getRelations() as $relation => $builderName) {
-      	$model->$relation = $this->context->getBuilder($builderName)->build(false);
+      foreach ($this->description->getRelations() as $relation => $builderName)
+      {
+        if ($model->$relation instanceof Doctrine_Collection)
+        {
+          $model->$relation->add($this->context->getBuilder($builderName)->build(false));
+        } 
+        else 
+        {
+          $model->$relation = $this->context->getBuilder($builderName)->build(false);
+        }
       }
     }
     
