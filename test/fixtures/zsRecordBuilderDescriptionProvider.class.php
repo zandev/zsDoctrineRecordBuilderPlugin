@@ -60,8 +60,94 @@ class zsRecordBuilderDescriptionProvider
   
   public static function getValidDescriptionsForManyRelationWithManyBuilders()
   {
-//    var_dump(self::getFixtures('valid descriptions for many relation with many builders'));die();
     return self::getFixtures('valid descriptions for many relation with many builders');
+  }
+  
+  public static function getValidDescriptions()
+  {
+    $fixtures = self::getFixtures('valid descriptions for many relation with many builders');
+    foreach (self::getValidDescriptionsWithCallables() as $fixture) 
+    {
+    	$fixtures = array_merge($fixture, $fixtures);
+    }
+    return $fixtures;
+  }
+  
+  public static function getValidDescriptionsWithCallables()
+  {
+    return array(
+      array(array(
+        'name' => 'stephane',
+        'model' => 'User',
+        'attributes' => array(
+          'firstname' => array('uniqid')
+        ),
+        'relations' => array(
+          'firstname' => array('Class', 'method')
+        ),
+      )),
+      array(array(
+        'name' => 'stephane',
+        'model' => 'User',
+        'attributes' => array(
+          'firstname' => function() { return uniqid();},
+        ),
+      )),
+    );
+  }
+  
+  public static function getInvalidDescriptions()
+  {
+    return array(
+      array(array()),
+      array(array(
+        'naem' => 'stephane', 
+        'model' => 'User',
+      )),
+      array(array(
+        'name' => 'stephane', 
+        'modle' => 'User',
+      )),
+      array(array(
+        'name' => 'stephane', 
+        'model' => 'User',
+        'attribute' => array(
+        ),
+      )),
+      array(array(
+        'name' => 'stephane', 
+        'model' => 'User',
+        'attributes' => array(
+        ),
+        'rlations' => array(
+        ),
+      )),
+      array(array(
+        'name' => 'stephane', 
+        'model' => 'User',
+        'attributes' => array(
+        ),
+        'relations' => array(
+        ),
+        'unknow' => array(
+        ),
+      )),
+      array(array(
+        'name' => 'stephane', 
+        'model' => 'User',
+        'attributes' => 'property',
+        'relations' => array(
+        ),
+      )),
+      array(array(
+        'name' => 'stephane', 
+        'model' => 'User',
+        'attributes' => 'property',
+        'relations' => array(
+          'property' => 'value'
+        ),
+      )),
+    );
   }
 }
 

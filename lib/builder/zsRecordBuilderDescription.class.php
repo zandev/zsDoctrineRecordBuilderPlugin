@@ -1,27 +1,22 @@
 <?php
 
-class zsRecordBuilderDescription
+final class zsRecordBuilderDescription
 {
 
   public function __construct (array $description)
   {
-    if (empty($description)) {
-      throw new InvalidArgumentException('$description is empty');
-    }
+    $data = zsRecordBuilderDescriptionParser::getInstance()->parse($description);
     
-    $this->setModel(@$description['model']);
-    $this->setName(@$description['name']);
-    $this->setAttributes(@$description['attributes']);
-    $this->setRelations(@$description['relations']);
+    $this->setModel($data['model']);
+    $this->setName($data['name']);
+    $this->setAttributes(@$data['attributes']);
+    $this->setRelations(@$data['relations']);
   }
 
   private $model;
 
   private function setModel ($model)
   {
-    if (empty($model)) {
-      throw new InvalidArgumentException('$model is empty');
-    }
     if (! $this->model) {
       $this->model = $model;
     }
@@ -36,9 +31,6 @@ class zsRecordBuilderDescription
 
   private function setName ($name)
   {
-    if (empty($name)) {
-      throw new InvalidArgumentException('$name is empty');
-    }
     if (! $this->name) {
       $this->name = $name;
     }
