@@ -54,7 +54,7 @@ final class zsRecordBuilder
   {
     if(is_array($value))
     {
-      if(count($value) == 1) $value = current($value);
+      $value = $value['callback'];
     }
     if (is_callable($value))
     {
@@ -63,16 +63,17 @@ final class zsRecordBuilder
     $model->$attribute = $value;
   }
   
-  private function addRelation(Doctrine_Record $model, $relation, $builderName)
+  private function addRelation(Doctrine_Record $model, $relation, $builder)
   {
+    $record = $this->context->getBuilder($builder)->build(false);
+    
     if ($model->$relation instanceof Doctrine_Collection)
     {
-      $record = $this->context->getBuilder($builderName)->build(false);
-      $model->$relation->add($record, $builderName);
+      $model->$relation->add($record, $builder);
     } 
     else 
     {
-      $model->$relation = $this->context->getBuilder($builderName)->build(false);
+      $model->$relation = $record;
     }
   }
 

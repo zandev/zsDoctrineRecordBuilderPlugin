@@ -80,10 +80,16 @@ class zsRecordBuilderDescriptionProvider
         'name' => 'stephane',
         'model' => 'User',
         'attributes' => array(
-          'firstname' => array('uniqid')
+          'firstname' => array('callback' => 'uniqid'),
+          'lastname'  => array('callback' => array('Class', 'method')),
+          'address'   => array('callback' => function() { return uniqid();}),
         ),
         'relations' => array(
-          'firstname' => array('Class', 'method')
+          'Groups' => array(
+            array('callback' => 'get_a_group'),
+            array('callback' => array('Class', 'method')),
+            array('callback' => function() { return new Group();}),
+          ),
         ),
       )),
       array(array(
@@ -139,12 +145,65 @@ class zsRecordBuilderDescriptionProvider
         'relations' => array(
         ),
       )),
+      
+      //unvalid attributes :
       array(array(
         'name' => 'stephane', 
         'model' => 'User',
-        'attributes' => 'property',
+        'attributes' => array(
+          'firstname' => array()
+        ),
+      )),
+      array(array(
+        'name' => 'stephane', 
+        'model' => 'User',
+        'attributes' => array(
+          'firstname' => array('someprop')
+        ),
+      )),
+      array(array(
+        'name' => 'stephane', 
+        'model' => 'User',
+        'attributes' => array(
+          'firstname' => array(function(){} )
+        ),
+      )),
+      
+      //unvalid relations
+      array(array(
+        'name' => 'stephane', 
+        'model' => 'User',
         'relations' => array(
-          'property' => 'value'
+          'Groups' => array(
+            array('someprop')
+          )
+        ),
+      )),
+      array(array(
+        'name' => 'stephane', 
+        'model' => 'User',
+        'relations' => array(
+          'Groups' => array(
+            array('Class', 'method')
+          )
+        ),
+      )),
+      array(array(
+        'name' => 'stephane', 
+        'model' => 'User',
+        'relations' => array(
+          'Groups' => array(
+            array(function(){})
+          )
+        ),
+      )),
+      array(array(
+        'name' => 'stephane', 
+        'model' => 'User',
+        'relations' => array(
+          'Groups' => array(
+            function(){}
+          )
         ),
       )),
     );

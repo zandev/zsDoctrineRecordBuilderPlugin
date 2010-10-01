@@ -82,10 +82,23 @@ final class zsRecordBuilderDescriptionParser
   
   private function validateBuilder($builder, $description)
   {
-    if(!(is_string($builder) || is_callable($builder) || $builder instanceof zsRecordBuilder))
+    if(!(is_string($builder) || is_array($builder) || is_callable($builder) || $builder instanceof zsRecordBuilder))
     {
       $this->invalidateData($description, 'relations', 
-      'The provided builder should be either a string, an instance of zsRecordBuilder or an instance of Closure');
+      'The provided builder should be either a string, a php callable or an instance of zsRecordBuilder');
+    }
+    if(is_array($builder))
+    {
+      if(!isset($builder['callback']))
+      {
+        $this->invalidateData($description, 'relations', 
+          'The provided builder array should have a callback key');
+      }
+      unset($builder['callback']);
+      if(!empty($builder))
+      {
+         $this->invalidateData($description, 'relations/callback');
+      }
     }
   }
   

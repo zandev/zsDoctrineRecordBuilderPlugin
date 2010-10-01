@@ -215,7 +215,7 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
       'name' => 'stephanerrichard',
       'model' => 'User',
       'attributes' => array(
-        'firstname' => array('i_am_a_call_back_function'),
+        'firstname' => array('callback' => 'give_me_a_firstname'),
       ),
     );
     
@@ -233,13 +233,13 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
       'name' => 'stephanerrichard',
       'model' => 'User',
       'attributes' => array(
-        'firstname' => array('IAmACallback', 'method'),
+        'firstname' => array('callback' => array('IAmACallback', 'getAttribute')),
       ),
     );
     
     $builder = new zsRecordBuilder($description);
     
-    $this->assertEquals('User::' . IAmACallback::I_AM_A_CALL_BACK_METHOD, $builder->build()->firstname);
+    $this->assertEquals('User::' . IAmACallback::EXPECTED_ATTRIBUTE_VALUE, $builder->build()->firstname);
   }
   
   /**
@@ -253,9 +253,9 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
       'name' => 'stephanerrichard',
       'model' => 'User',
       'attributes' => array(
-        'firstname' => function(Doctrine_Record $record)use($scope){
+        'firstname' => array('callback' => function(Doctrine_Record $record)use($scope){
           return get_class($record) . '::' . $scope->message;
-        },
+        }),
       ),
     );
     
@@ -263,21 +263,79 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
     
     $this->assertEquals('User::' . $scope->message, $builder->build()->firstname);
   }
+  
+  /**
+   * @_testdox it should build relations from callable function given in an array
+   */
+  public function isShouldBuildRelationFromACallableFunction()
+  {
+    $description = array(
+      'name' => 'stephanerrichard',
+      'model' => 'User',
+      'attributes' => array(
+        'firstname' => 'stephane',
+      ),
+      'relations' => array(
+        'Groups' => array(
+          array('give_me_a_group'),
+        ),
+      ),
+    );
+    
+    $builder = new zsRecordBuilder($description);
+    
+    $this->assertEquals('give_me_a_group', $builder->build()->Groups->getFirst()->name);
+  }
+  
+  /**
+   * @_testdox it should build relations from valid class/method pair given in an array
+   */
+  public function isShouldBuildRelationFromACallableClassMethod()
+  {
+    $this->markTestIncomplete();
+  }
+  
+  /**
+   * @_testdox it should build relations from a closure
+   */
+  public function isShouldBuildRelationFromACallableClosure()
+  {
+    $this->markTestIncomplete();
+  }
+  
+  /**
+   * @_testdox it should build relations from a zsRecordBuilder instance
+   */
+  public function isShouldBuildRelationFromAzsRecordBuilderInstance()
+  {
+    $this->markTestIncomplete();
+  }
+   
+   
 }
 
 define('__I_AM_A_CALL_BACK_FUNCTION__', 'I am a callback function');
 
-function i_am_a_call_back_function(Doctrine_Record $record)
+function give_me_a_firstname(Doctrine_Record $record)
 {
   return get_class($record) . '::' . __I_AM_A_CALL_BACK_FUNCTION__;
 }
 
+function give_me_a_group() {
+	return new zsRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'give_me_a_group')));
+}
+
 class IAmACallback
 {
-  const I_AM_A_CALL_BACK_METHOD = 'I am a callback method';
+  const EXPECTED_ATTRIBUTE_VALUE = 'I am a callback method';
   
-  public static function method(Doctrine_Record $record)
+  public static function getAttribute(Doctrine_Record $record)
   {
-    return get_class($record) . '::' . self::I_AM_A_CALL_BACK_METHOD;
+    return get_class($record) . '::' . self::EXPECTED_ATTRIBUTE_VALUE;
+  }
+  
+  public static function giveMeAGroup(Doctrine_Record $record)
+  {
+    return new zsRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'IAmACallback::giveMeAGroup')));
   }
 }
