@@ -65,11 +65,27 @@ final class zsRecordBuilder
   
   private function addRelation(Doctrine_Record $model, $relation, $builder)
   {
-    $record = $this->context->getBuilder($builder)->build(false);
+    if(is_array($builder))
+    {
+      $builder = $builder['callback'];
+    }
+    if(is_callable($builder))
+    {
+      $record = call_user_func($builder, $model);
+    }
+    else if($builder instanceof zsRecordBuilder)
+    {
+      $record = $builder->build();
+    }
+    else if(is_string($builder))
+    {      
+      $record = $this->context->getBuilder($builder)->build(false);
+      $name = $builder;
+    }
     
     if ($model->$relation instanceof Doctrine_Collection)
     {
-      $model->$relation->add($record, $builder);
+      $model->$relation->add($record, $name);
     } 
     else 
     {

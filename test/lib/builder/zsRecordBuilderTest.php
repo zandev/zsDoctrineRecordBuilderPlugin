@@ -265,7 +265,7 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
   }
   
   /**
-   * @_testdox it should build relations from callable function given in an array
+   * @testdox it should build relations from callable function given in an array
    */
   public function isShouldBuildRelationFromACallableFunction()
   {
@@ -277,38 +277,87 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
       ),
       'relations' => array(
         'Groups' => array(
-          array('give_me_a_group'),
+          array('callback' => 'give_me_a_group'),
         ),
       ),
     );
     
     $builder = new zsRecordBuilder($description);
     
-    $this->assertEquals('give_me_a_group', $builder->build()->Groups->getFirst()->name);
+    $this->assertEquals('give me a group', $builder->build()->Groups->getFirst()->name);
   }
   
   /**
-   * @_testdox it should build relations from valid class/method pair given in an array
+   * @testdox it should build relations from valid class/method pair given in an array
    */
   public function isShouldBuildRelationFromACallableClassMethod()
   {
-    $this->markTestIncomplete();
+    $description = array(
+      'name' => 'stephanerrichard',
+      'model' => 'User',
+      'attributes' => array(
+        'firstname' => 'stephane',
+      ),
+      'relations' => array(
+        'Groups' => array(
+          array('callback' => array('IAmACallback', 'giveMeAGroup')),
+        ),
+      ),
+    );
+    
+    $builder = new zsRecordBuilder($description);
+    
+    $this->assertEquals('IAmACallback giveMeAGroup', $builder->build()->Groups->getFirst()->name);
   }
   
   /**
-   * @_testdox it should build relations from a closure
+   * @testdox it should build relations from a closure
    */
   public function isShouldBuildRelationFromACallableClosure()
   {
-    $this->markTestIncomplete();
+    $description = array(
+      'name' => 'stephanerrichard',
+      'model' => 'User',
+      'attributes' => array(
+        'firstname' => 'stephane',
+      ),
+      'relations' => array(
+        'Groups' => array(
+          array('callback' => function(Doctrine_Record $record){
+            $builder = new zsRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'I come from a Closure')));
+            return $builder->build(false);
+          }),
+        ),
+      ),
+    );
+    
+    $builder = new zsRecordBuilder($description);
+    
+    $this->assertEquals('I come from a Closure', $builder->build()->Groups->getFirst()->name);
   }
   
   /**
-   * @_testdox it should build relations from a zsRecordBuilder instance
+   * @testdox it should build relations from a zsRecordBuilder instance
    */
   public function isShouldBuildRelationFromAzsRecordBuilderInstance()
   {
-    $this->markTestIncomplete();
+    $groupBuilder = new zsRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'I come from a zsRecordBuilder')));
+    $description = array(
+      'name' => 'stephanerrichard',
+      'model' => 'User',
+      'attributes' => array(
+        'firstname' => 'stephane',
+      ),
+      'relations' => array(
+        'Groups' => array(
+          array('callback' => $groupBuilder),
+        ),
+      ),
+    );
+    
+    $builder = new zsRecordBuilder($description);
+    
+    $this->assertEquals('I come from a zsRecordBuilder', $builder->build()->Groups->getFirst()->name);
   }
    
    
@@ -321,8 +370,10 @@ function give_me_a_firstname(Doctrine_Record $record)
   return get_class($record) . '::' . __I_AM_A_CALL_BACK_FUNCTION__;
 }
 
-function give_me_a_group() {
-	return new zsRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'give_me_a_group')));
+function give_me_a_group(Doctrine_Record $record) 
+{
+  $builder = new zsRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'give me a group')));
+	return $builder->build(false);
 }
 
 class IAmACallback
@@ -336,6 +387,7 @@ class IAmACallback
   
   public static function giveMeAGroup(Doctrine_Record $record)
   {
-    return new zsRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'IAmACallback::giveMeAGroup')));
+    $builder = new zsRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'IAmACallback giveMeAGroup')));
+    return $builder->build(false);
   }
 }
