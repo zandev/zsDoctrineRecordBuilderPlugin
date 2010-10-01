@@ -186,21 +186,21 @@ valid descriptions for many relation with many builders:
   admin:
     model: Group 
     attributes: 
-    administrator:
+      name: admin
     relations: 
       Users: [david, djul]
   
   webmaster:
     model: Group 
     attributes: 
-    administrator:
+      name: webmaster
     relations: 
       Users: [stephane, djul]
       
   user:
     model: Group 
     attributes: 
-    administrator:
+      name: user
     relations: 
       Users: [stephane]
   

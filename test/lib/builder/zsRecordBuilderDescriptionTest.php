@@ -84,6 +84,72 @@ class zsRecordBuilderDescriptionTest extends PHPUnit_Framework_TestCase
     $d = new zsRecordBuilderDescription(array('name' => 'stephane', 'model' => 'User'));
     $this->assertTrue(is_array($d->getRelations()));
   }
+  
+  /**
+   * @_testdox construct() should fail to validate the array structure with erroneous data
+   * @expectedException InvalidArgumentException
+   * @dataProvider constructValidateDescriptionArrayProvider
+   */
+  public function constructValidateDescriptionArray(array $data)
+  {
+    new zsRecordBuilderDescription($data);
+  }
+  
+  public static function constructValidateDescriptionArrayProvider()
+  {
+    return array(
+      array(array()),
+      array(array(
+        'naem' => 'stephane', 
+        'model' => 'User',
+      )),
+      array(array(
+        'name' => 'stephane', 
+        'modle' => 'User',
+      )),
+      array(array(
+        'name' => 'stephane', 
+        'model' => 'User',
+        'attribute' => array(
+        ),
+      )),
+      array(array(
+        'name' => 'stephane', 
+        'model' => 'User',
+        'attributes' => array(
+        ),
+        'rlations' => array(
+        ),
+      )),
+      array(array(
+        'name' => 'stephane', 
+        'model' => 'User',
+        'attributes' => array(
+        ),
+        'relations' => array(
+        ),
+        'unknow' => array(
+        ),
+      )),
+      array(array(
+        'name' => 'stephane', 
+        'model' => 'User',
+        'attributes' => 'property',
+        'relations' => array(
+        ),
+      )),
+      array(array(
+        'name' => 'stephane', 
+        'model' => 'User',
+        'attributes' => 'property',
+        'relations' => array(
+          'property' => 'value'
+        ),
+      )),
+    );
+  }
+   
+   
 
 }
 

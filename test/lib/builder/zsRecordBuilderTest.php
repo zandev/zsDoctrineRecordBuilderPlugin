@@ -176,15 +176,15 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
     $builder = new zsRecordBuilder($data);
     $record = $builder->build();
     
-    foreach ($description->getRelations() as $relations)
+    foreach ($description->getRelations() as $relation => $builders)
     {
       $i = 0;
-      foreach ($relations as $relation => $builderName) 
+      foreach ($builders as $builderName) 
       {
         ++$i;
         $expectedClass = get_class(zsRecordBuilderContext::getInstance()->getBuilder($builderName)->build());
-        $this->assertType(Doctrine_Record, $record->$relations[$i]);
-        $this->assertType($expectedClass, $record->$relations[$i]);
+        $this->assertType(Doctrine_Record, $record->$relation->get($builderName));
+        $this->assertType($expectedClass, $record->$relation->get($builderName));
       }
     }
   }

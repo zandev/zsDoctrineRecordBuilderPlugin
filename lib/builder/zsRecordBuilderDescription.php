@@ -8,6 +8,7 @@ class zsRecordBuilderDescription
     if (empty($description)) {
       throw new InvalidArgumentException('$description is empty');
     }
+    
     $this->setModel(@$description['model']);
     $this->setName(@$description['name']);
     $this->setAttributes(@$description['attributes']);
