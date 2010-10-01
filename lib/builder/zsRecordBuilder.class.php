@@ -26,7 +26,7 @@ final class zsRecordBuilder
     
     foreach ($this->description->getAttributes() as $attr => $value) 
     {
-    	$model->$attr = $value;
+    	$this->addAttribute($model, $attr, $value);
     }
     
     if ($withRelations) 
@@ -48,6 +48,19 @@ final class zsRecordBuilder
     }
     
     return $model;
+  }
+  
+  private function addAttribute(Doctrine_Record $model, $attribute, $value)
+  {
+    if(is_array($value))
+    {
+      if(count($value) == 1) $value = current($value);
+    }
+    if (is_callable($value))
+    {
+      $value = call_user_func($value, $model);      
+    }
+    $model->$attribute = $value;
   }
   
   private function addRelation(Doctrine_Record $model, $relation, $builderName)

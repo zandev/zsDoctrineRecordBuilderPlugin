@@ -205,15 +205,79 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
     }, 
     zsRecordBuilderDescriptionProvider::getValidDescriptionsForManyRelationWithManyBuilders()));
   }
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
+  
+  /**
+   * @testdox it should build attributes from a callable function given in an array
+   */
+  public function itShouldBuildAttributeFromACallableFunction()
+  {
+    $description = array(
+      'name' => 'stephanerrichard',
+      'model' => 'User',
+      'attributes' => array(
+        'firstname' => array('i_am_a_call_back_function'),
+      ),
+    );
+    
+    $builder = new zsRecordBuilder($description);
+    
+    $this->assertEquals('User::' . __I_AM_A_CALL_BACK_FUNCTION__, $builder->build()->firstname);
+  }
+  
+  /**
+   * @testdox it should build attributes from a callable class/method pair given in an array
+   */
+  public function itShouldBuildAttributeFromACallableClassMethod()
+  {
+    $description = array(
+      'name' => 'stephanerrichard',
+      'model' => 'User',
+      'attributes' => array(
+        'firstname' => array('IAmACallback', 'method'),
+      ),
+    );
+    
+    $builder = new zsRecordBuilder($description);
+    
+    $this->assertEquals('User::' . IAmACallback::I_AM_A_CALL_BACK_METHOD, $builder->build()->firstname);
+  }
+  
+  /**
+   * @testdox it should build attributes from a closure
+   */
+  public function itShouldBuildAttributeFromAClosure()
+  {
+    $scope = new stdClass();
+    $scope->message = 'I come from a closure\'s return value';
+    $description = array(
+      'name' => 'stephanerrichard',
+      'model' => 'User',
+      'attributes' => array(
+        'firstname' => function(Doctrine_Record $record)use($scope){
+          return get_class($record) . '::' . $scope->message;
+        },
+      ),
+    );
+    
+    $builder = new zsRecordBuilder($description);
+    
+    $this->assertEquals('User::' . $scope->message, $builder->build()->firstname);
+  }
+}
+
+define('__I_AM_A_CALL_BACK_FUNCTION__', 'I am a callback function');
+
+function i_am_a_call_back_function(Doctrine_Record $record)
+{
+  return get_class($record) . '::' . __I_AM_A_CALL_BACK_FUNCTION__;
+}
+
+class IAmACallback
+{
+  const I_AM_A_CALL_BACK_METHOD = 'I am a callback method';
+  
+  public static function method(Doctrine_Record $record)
+  {
+    return get_class($record) . '::' . self::I_AM_A_CALL_BACK_METHOD;
+  }
 }
