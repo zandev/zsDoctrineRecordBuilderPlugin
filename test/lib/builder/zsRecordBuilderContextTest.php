@@ -78,6 +78,7 @@ class zsRecordBuilderContextTest extends PHPUnit_Framework_TestCase
    */
   public function getInstanceReturnTheDefaultInstance()
   {
+    zsRecordBuilderContext::cleanInstances();
     $a = zsRecordBuilderContext::getInstance();
     
     for ($i = 0; $i < 3; $i++) {
@@ -90,6 +91,7 @@ class zsRecordBuilderContextTest extends PHPUnit_Framework_TestCase
    */
   public function firstInstanceIsAlwaysTheDefault()
   {
+    zsRecordBuilderContext::cleanInstances();
     $a = new zsRecordBuilderContext();
     
     for ($i = 0; $i < 3; $i++) {
@@ -111,6 +113,26 @@ class zsRecordBuilderContextTest extends PHPUnit_Framework_TestCase
     
     $this->assertEquals(0, count(zsRecordBuilderContext::getInstance()->getBuilders()));
   }
+  
+  /**
+   * @testdox addBuilder() proxies addArrayBuilder()
+   */
+  public function addBuilderProxies_addArrayBuilder()
+  {
+    zsRecordBuilderContext::getInstance()->addBuilder(array('name' => 'array builder', 'model' => 'Group'));
+    $this->assertType('zsArrayRecordBuilder', zsRecordBuilderContext::getInstance()->getBuilder('array builder'));
+  }
+  
+  /**
+   * @testdox addBuilder() proxies addClosureBuilder()
+   */
+  public function addBuilderProxies_addClosureBuilder()
+  {
+    zsRecordBuilderContext::getInstance()->addBuilder('closure builder', function(){});
+    $this->assertType('zsClosureRecordBuilder', zsRecordBuilderContext::getInstance()->getBuilder('closure builder'));
+  }
+   
+   
    
    
    

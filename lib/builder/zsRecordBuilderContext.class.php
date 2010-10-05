@@ -27,19 +27,29 @@ final class zsRecordBuilderContext
     switch (count($args)) {
       case 0:
       {
-        ;
+        throw new InvalidArgumentException('addBuilder() expect at least one argument');
         break;
       }
       
       case 1:
       {
-        ;
+        if(is_array($args[0]))
+        {
+          $this->addArrayBuilder($args[0]);
+        }
         break;
       }
       
       case 2:
       {
-        ;
+        if($args[1] instanceof Closure)
+        {
+          $this->addClosureBuilder($args[0], $args[1]);
+        }
+        else
+        {
+          throw new InvalidArgumentException('addBuilder() expect one or two parameters');
+        }
         break;
       }
       
@@ -53,15 +63,36 @@ final class zsRecordBuilderContext
   
   public function addArrayBuilder(array $description)
   {
+    if(!@$description['name'] || empty($description['name']))
+    {
+      throw new InvalidArgumentException('addArrayBuilder() expect description to contain a valid name');
+    }
     $builder = new zsArrayRecordBuilder($description);
     $this->builders[$description['name']] = $builder;
     return $builder;
   }
   
-  public function addClosureBuilder($name, Closure $closure)
+  public function addClosureBuilder($options, Closure $closure)
   {
-    $builder = new zsClosureRecordBuilder($closure);
-    $this->builders[$name] = $builder;
+    if(is_string($options))
+    {
+      $options = array('model' => $options, 'name' => $options);
+    }
+    if(!is_array($options))
+    {
+      throw new InvalidArgumentException('addClosureBuilder() expect first parameter to be either a string or a hash');
+    }
+    if(!@$options['name'])
+    {
+      throw new InvalidArgumentException('addClosureBuilder() options parameter expect at least a name');
+    }
+    if(!@$options['model'])
+    {
+      $options['model'] = $options['name'];
+    }
+    
+    $builder = new zsClosureRecordBuilder($options['model'], $closure);
+    $this->builders[$options['name']] = $builder;
     return $builder;
   }
 
@@ -98,6 +129,11 @@ final class zsRecordBuilderContext
   public function cleanBuilders()
   {
     $this->builders = array();
+  }
+  
+  public static function cleanInstances()
+  {
+    self::$defaultInstance = null;
   }
 
   public function __set ($property, $value)

@@ -12,17 +12,30 @@ final class zsClosureRecordBuilder implements zsRecordBuilder
    * @var zsRecordBuilderContext
    */
   private $context;
-
-  public function __construct (Closure $closure, zsRecordBuilderContext $context = null)
+  
+  /**
+   * @var string
+   */
+  private $model;
+  
+  public function __construct ($model, Closure $closure, zsRecordBuilderContext $context = null)
   {
+    if(empty($model))
+    {
+      throw new InvalidArgumentException('an empty string is not a valid model');
+    }
+    $this->model = $model;
     $this->closure = $closure;
     $this->context = $context ? $context : zsRecordBuilderContext::getInstance();
   }
-
+  
   public function build($withRelations = true)
   {
-    $class = $this->closure->getModel();
+    $class = $this->model;
     $model = new $class();
+    
+    $builder = $this->closure;
+    $builder($model);
     
     return $model;
   }
