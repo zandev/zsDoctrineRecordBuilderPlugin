@@ -147,7 +147,31 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
     $this->assertEquals('Webmaster', $builder->build()->Groups->getLast()->name);
   }
    
+  /**
+   * @testdox create() should return a persisted object
+   */
+  public function createPersist()
+  {
+    $this->markTestIncomplete();
+  }
   
+  /**
+   * @testdox stub() should return a stubbed object, an instance of stdClass with all record's properties and relations stubbed
+   */
+  public function stubReturnStdClassWithCorrectProperties()
+  {
+    $this->markTestIncomplete();
+  }
+  
+  /**
+   * @testdox attributes() should return an array of valid properties and relations
+   */
+  public function attributesReturnAnArrayOfProperties()
+  {
+    $this->markTestIncomplete();
+  } 
+   
+   
   
   
    

@@ -63,10 +63,10 @@ final class zsRecordBuilder
     $this->context = $context ? $context : zsRecordBuilderContext::getInstance();
   }
 
-  public function build($withRelations = true)
+  public function build(object $object = null)
   {
     $class = $this->model;
-    $model = new $class();
+    $model = $object ? $object : new $class();
     
     if($this->parent)
     {
@@ -78,6 +78,23 @@ final class zsRecordBuilder
     $builder($model);
     
     return $model;
+  }
+  
+  public function create()
+  {
+    $record = $this->build();
+    $record->save();
+    return $record;
+  }
+  
+  public function stub()
+  {
+    return $this->build(new stdClass());
+  }
+  
+  public function attributes()
+  {
+    return $this->build()->toArray();
   }
   
   public function __set ($property, $value)
