@@ -27,49 +27,45 @@ class zsRecordBuilderContextTest extends PHPUnit_Framework_TestCase
   }
   
   /**
-   * @testdox addArrayBuilder() api example
+   * @testdox addBuilder() api example
    */
-  public function addArrayBuilderAPI()
+  public function addBuilderAPI()
   {
-    $this->builder->addArrayBuilder(array(
-      'name' => 'stephane',
-      'model' => 'User',
-      'attributes' => array(
-        'firstname' => 'stephane',
-        'lastname' => 'Richard',
-        'password' => array('Class', 'method'),
-        'salt' => function(){return uniqid();},
-        'group' => 'admin', //Will try to match a builder named admin for the relation 'group'
-        'phonenumbers' => '00 33 3 67 45 24 33' // same as $stephane->phonenumers[]->number = '00 33 3 67 45 24 33'
-      )
-    ));
+    $this->builder->addBuilder(array('name' => 'stephane', 'model' => 'User'), function(Doctrine_Record $record){
+        $record->firstname = 'stephane';
+        $record->lastname = 'Richard';
+        $record->password = array('Class', 'method');
+        $record->salt = function(){return uniqid();};
+        $record->group = 'admin'; //Will try to match a builder named admin for the relation 'group'
+        $record->phonenumbers = '00 33 3 67 45 24 33'; // same as $stephane->phonenumers[]->number = '00 33 3 67 45 24 33'
+    });
     $this->assertTrue(true);
   }
   
   /**
-   * @testdox addArrayBuilder() return an instance of zsDoctrineBuilder
+   * @testdox addBuilder() return an instance of zsDoctrineBuilder
    */
-  public function addArrayBuilderReturnBuilderInstance()
+  public function addBuilderReturnBuilderInstance()
   {
-    $r =  $this->builder->addArrayBuilder(array('model' => 'User', 'name' => 'stephane'));
+    $r =  $this->builder->addBuilder(array('model' => 'User', 'name' => 'stephane'), function(){});
     $this->assertType('zsRecordBuilder', $r);
   }
   
   /**
-   * @testdox addArrayBuilder()shoudl register the builder
+   * @testdox addBuilder()shoudl register the builder
    */
-  public function addArrayBuilderRegisterTheBuilderInstance()
+  public function addBuilderRegisterTheBuilderInstance()
   {
-    $r = $this->builder->addArrayBuilder(array('name' => 'stephane', 'model' => 'User'));
+    $r = $this->builder->addBuilder(array('name' => 'stephane', 'model' => 'User'), function(){});
     $this->assertTrue(in_array($r, $this->builder->getBuilders()));
   }
   
   /**
-   * @testdox after a call to addArrayBuilder(), getBuilder('name') should return the correct instance
+   * @testdox after a call to addBuilder(), getBuilder('name') should return the correct instance
    */
   public function getBuilderReturnTheCorrectBuilder()
   {
-    $r = $this->builder->addArrayBuilder(array('name' => 'stephane', 'model' => 'User'));
+    $r = $this->builder->addBuilder(array('name' => 'stephane', 'model' => 'User'), function(){});
     $this->assertEquals($r, $this->builder->getBuilder('stephane'));
   }
   
@@ -105,22 +101,12 @@ class zsRecordBuilderContextTest extends PHPUnit_Framework_TestCase
    */
   public function cleanBuilders()
   {
-    foreach (zsRecordBuilderDescriptionProvider::getValidDescriptionsWithAttributes() as $description) {
-      zsRecordBuilderContext::getInstance()->addArrayBuilder($description);
-    }
+    zsRecordBuilderContext::getInstance()->addBuilder('User', function(){});
+    zsRecordBuilderContext::getInstance()->addBuilder('Broup', function(){});
     
     zsRecordBuilderContext::getInstance()->cleanBuilders();
     
     $this->assertEquals(0, count(zsRecordBuilderContext::getInstance()->getBuilders()));
-  }
-  
-  /**
-   * @testdox addBuilder() proxies addArrayBuilder()
-   */
-  public function addBuilderProxies_addArrayBuilder()
-  {
-    zsRecordBuilderContext::getInstance()->addBuilder(array('name' => 'array builder', 'model' => 'Group'));
-    $this->assertType('zsArrayRecordBuilder', zsRecordBuilderContext::getInstance()->getBuilder('array builder'));
   }
   
   /**
@@ -129,7 +115,7 @@ class zsRecordBuilderContextTest extends PHPUnit_Framework_TestCase
   public function addBuilderProxies_addClosureBuilder()
   {
     zsRecordBuilderContext::getInstance()->addBuilder('closure builder', function(){});
-    $this->assertType('zsClosureRecordBuilder', zsRecordBuilderContext::getInstance()->getBuilder('closure builder'));
+    $this->assertType('zsRecordBuilder', zsRecordBuilderContext::getInstance()->getBuilder('closure builder'));
   }
    
    
