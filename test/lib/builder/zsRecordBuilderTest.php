@@ -18,21 +18,21 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
   }
   
   /**
-   * @testdox construct should accept a Hash, a Closure and a builder context
-   */
-  public function constructArgumentsWithHashAsOptions()
-  {
-    $builder = new zsRecordBuilder(array('model' => 'User'), function(){}, zsRecordBuilderContext::getInstance());
-    $this->assertType('User', $builder->build());
-  }
-  
-  /**
    * @testdox construct do not accept an empty string as model
    * @expectedException InvalidArgumentException
    */
   public function constructRequireValidStringAsModel()
   {
     $builder = new zsRecordBuilder('', function(){});
+  }
+  
+  /**
+   * @testdox construct should accept a Hash, a Closure and a builder context
+   */
+  public function constructArgumentsWithHashAsOptions()
+  {
+    $builder = new zsRecordBuilder(array('model' => 'User'), function(){}, zsRecordBuilderContext::getInstance());
+    $this->assertType('User', $builder->build());
   }
   
   /**
@@ -140,9 +140,14 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
       $record->lastname = 'richard';
       $record->Groups[] = zsRecordBuilderContext::getInstance()->getBuilder('webmaster')->build();
     });
+    
+    $this->assertEquals('richard', $builder->build()->lastname);
+    $this->assertEquals(2, $builder->build()->Groups->count());
+    $this->assertEquals('Administrator', $builder->build()->Groups->getFirst()->name);
+    $this->assertEquals('Webmaster', $builder->build()->Groups->getLast()->name);
   }
    
-   
+  
   
   
    
