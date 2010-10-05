@@ -20,10 +20,11 @@ class TestRunner extends PHPUnit_Framework_TestSuite
   {
     $this->setName('TestRunner');
     
-//    $this->addTestSuite('zsRecordBuilderContextTest');
-//    $this->addTestSuite('zsRecordBuilderDescriptionTest');
-    $this->addTestSuite('zsRecordBuilderTest');
-//    $this->addTestSuite('zsRecordBuilderDescriptionParserTest');
+    $this->addTestSuite('zsArrayRecordBuilderTest');
+    $this->addTestSuite('zsClosureRecordBuilderTest');
+    $this->addTestSuite('zsRecordBuilderContextTest');
+    $this->addTestSuite('zsRecordBuilderDescriptionTest');
+    $this->addTestSuite('zsRecordBuilderDescriptionParserTest');
   }
 
   /**

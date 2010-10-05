@@ -5,7 +5,7 @@ require_once 'PHPUnit/Framework/TestCase.php';
 /**
  * test case.
  */
-class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
+class zsArrayRecordBuilderTest extends PHPUnit_Framework_TestCase
 {
   
   protected function tearDown()
@@ -18,7 +18,7 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
    */
   public function recordBuilderConstruct()
   {
-    $builder = new zsRecordBuilder(array('model' => 'User', 'name' => 'stephane'));
+    $builder = new zsArrayRecordBuilder(array('model' => 'User', 'name' => 'stephane'));
   }
   
   /**
@@ -26,7 +26,7 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
    */
   public function buildReturnDoctrine_Record()
   {
-    $builder = new zsRecordBuilder(array('model' => 'User', 'name' => 'stephane'));
+    $builder = new zsArrayRecordBuilder(array('model' => 'User', 'name' => 'stephane'));
     $this->assertType('Doctrine_Record', $builder->build());
   }
   
@@ -36,7 +36,7 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
    */
   public function buildReturnDoctrine_RecordSubtype($type)
   {
-    $builder = new zsRecordBuilder(array('model' => $type, 'name' => 'stephane'));
+    $builder = new zsArrayRecordBuilder(array('model' => $type, 'name' => 'stephane'));
     $this->assertType($type, $builder->build());
   }
   
@@ -56,7 +56,7 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
    */
   public function buildedInstanceMatchSpecifiedAttributes(array $data, zsRecordBuilderDescription $description)
   {
-    $builder = new zsRecordBuilder($data);
+    $builder = new zsArrayRecordBuilder($data);
     $record = $builder->build();
     
     foreach ($description->getAttributes() as $attr => $value)
@@ -83,12 +83,12 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
   {
     //prepare
     foreach (zsRecordBuilderDescriptionProvider::getValidDescriptionsWithOneToOneRelation() as $d) {
-      zsRecordBuilderContext::getInstance()->addBuilder($d);
+      zsRecordBuilderContext::getInstance()->addArrayBuilder($d);
     }
     unset($d);
     
     //
-    $builder = new zsRecordBuilder($data);
+    $builder = new zsArrayRecordBuilder($data);
     $record = $builder->build();
     
     foreach ($description->getRelations() as $relation => $builderName) {
@@ -125,12 +125,12 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
   {
     //prepare
     foreach (zsRecordBuilderDescriptionProvider::getValidDescriptionsForManyRelationWithOneBuilder() as $d) {
-      zsRecordBuilderContext::getInstance()->addBuilder($d);
+      zsRecordBuilderContext::getInstance()->addArrayBuilder($d);
     }
     unset($d);
     
     //
-    $builder = new zsRecordBuilder($data);
+    $builder = new zsArrayRecordBuilder($data);
     $record = $builder->build();
     
     foreach ($description->getRelations() as $relations => $builderName) {
@@ -168,12 +168,12 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
     //prepare
     foreach (zsRecordBuilderDescriptionProvider::getValidDescriptionsForManyRelationWithManyBuilders() as $d)
     {
-      zsRecordBuilderContext::getInstance()->addBuilder($d);
+      zsRecordBuilderContext::getInstance()->addArrayBuilder($d);
     }
     unset($d);
     
     //
-    $builder = new zsRecordBuilder($data);
+    $builder = new zsArrayRecordBuilder($data);
     $record = $builder->build();
     
     foreach ($description->getRelations() as $relation => $builders)
@@ -219,7 +219,7 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
       ),
     );
     
-    $builder = new zsRecordBuilder($description);
+    $builder = new zsArrayRecordBuilder($description);
     
     $this->assertEquals('User::' . __I_AM_A_CALL_BACK_FUNCTION__, $builder->build()->firstname);
   }
@@ -237,7 +237,7 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
       ),
     );
     
-    $builder = new zsRecordBuilder($description);
+    $builder = new zsArrayRecordBuilder($description);
     
     $this->assertEquals('User::' . IAmACallback::EXPECTED_ATTRIBUTE_VALUE, $builder->build()->firstname);
   }
@@ -259,7 +259,7 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
       ),
     );
     
-    $builder = new zsRecordBuilder($description);
+    $builder = new zsArrayRecordBuilder($description);
     
     $this->assertEquals('User::' . $scope->message, $builder->build()->firstname);
   }
@@ -281,7 +281,7 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
       ),
     );
     
-    $builder = new zsRecordBuilder($description);
+    $builder = new zsArrayRecordBuilder($description);
     
     $this->assertEquals('User::' . $scope->message, $builder->build()->firstname);
   }
@@ -304,7 +304,7 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
       ),
     );
     
-    $builder = new zsRecordBuilder($description);
+    $builder = new zsArrayRecordBuilder($description);
     
     $this->assertEquals('give me a group', $builder->build()->Groups->getFirst()->name);
   }
@@ -327,7 +327,7 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
       ),
     );
     
-    $builder = new zsRecordBuilder($description);
+    $builder = new zsArrayRecordBuilder($description);
     
     $this->assertEquals('IAmACallback giveMeAGroup', $builder->build()->Groups->getFirst()->name);
   }
@@ -346,14 +346,14 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
       'relations' => array(
         'Groups' => array(
           array('callback' => function(Doctrine_Record $record){
-            $builder = new zsRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'I come from a Closure')));
+            $builder = new zsArrayRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'I come from a Closure')));
             return $builder->build(false);
           }),
         ),
       ),
     );
     
-    $builder = new zsRecordBuilder($description);
+    $builder = new zsArrayRecordBuilder($description);
     
     $this->assertEquals('I come from a Closure', $builder->build()->Groups->getFirst()->name);
   }
@@ -372,14 +372,14 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
       'relations' => array(
         'Groups' => array(
           function(Doctrine_Record $record){
-            $builder = new zsRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'I come from a Closure')));
+            $builder = new zsArrayRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'I come from a Closure')));
             return $builder->build(false);
           },
         ),
       ),
     );
     
-    $builder = new zsRecordBuilder($description);
+    $builder = new zsArrayRecordBuilder($description);
     
     $this->assertEquals('I come from a Closure', $builder->build()->Groups->getFirst()->name);
   }
@@ -389,7 +389,7 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
    */
   public function isShouldBuildRelationFromAzsRecordBuilderInstanceInArray()
   {
-    $groupBuilder = new zsRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'I come from a zsRecordBuilder')));
+    $groupBuilder = new zsArrayRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'I come from a zsRecordBuilder')));
     $description = array(
       'name' => 'stephanerrichard',
       'model' => 'User',
@@ -403,7 +403,7 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
       ),
     );
     
-    $builder = new zsRecordBuilder($description);
+    $builder = new zsArrayRecordBuilder($description);
     
     $this->assertEquals('I come from a zsRecordBuilder', $builder->build()->Groups->getFirst()->name);
   }
@@ -413,7 +413,7 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
    */
   public function isShouldBuildRelationFromAzsRecordBuilderInstance()
   {
-    $groupBuilder = new zsRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'I come from a zsRecordBuilder')));
+    $groupBuilder = new zsArrayRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'I come from a zsRecordBuilder')));
     $description = array(
       'name' => 'stephanerrichard',
       'model' => 'User',
@@ -427,7 +427,7 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
       ),
     );
     
-    $builder = new zsRecordBuilder($description);
+    $builder = new zsArrayRecordBuilder($description);
     
     $this->assertEquals('I come from a zsRecordBuilder', $builder->build()->Groups->getFirst()->name);
   }
@@ -444,7 +444,7 @@ function give_me_a_firstname(Doctrine_Record $record)
 
 function give_me_a_group(Doctrine_Record $record) 
 {
-  $builder = new zsRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'give me a group')));
+  $builder = new zsArrayRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'give me a group')));
 	return $builder->build(false);
 }
 
@@ -459,7 +459,7 @@ class IAmACallback
   
   public static function giveMeAGroup(Doctrine_Record $record)
   {
-    $builder = new zsRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'IAmACallback giveMeAGroup')));
+    $builder = new zsArrayRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'IAmACallback giveMeAGroup')));
     return $builder->build(false);
   }
 }

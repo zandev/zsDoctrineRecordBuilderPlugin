@@ -27,11 +27,11 @@ class zsRecordBuilderContextTest extends PHPUnit_Framework_TestCase
   }
   
   /**
-   * @testdox addBuilder() api example
+   * @testdox addArrayBuilder() api example
    */
-  public function addBuilderAPI()
+  public function addArrayBuilderAPI()
   {
-    $this->builder->addBuilder(array(
+    $this->builder->addArrayBuilder(array(
       'name' => 'stephane',
       'model' => 'User',
       'attributes' => array(
@@ -47,29 +47,29 @@ class zsRecordBuilderContextTest extends PHPUnit_Framework_TestCase
   }
   
   /**
-   * @testdox addBuilder() return an instance of zsDoctrineBuilder
+   * @testdox addArrayBuilder() return an instance of zsDoctrineBuilder
    */
-  public function addBuilderReturnBuilderInstance()
+  public function addArrayBuilderReturnBuilderInstance()
   {
-    $r =  $this->builder->addBuilder(array('model' => 'User', 'name' => 'stephane'));
+    $r =  $this->builder->addArrayBuilder(array('model' => 'User', 'name' => 'stephane'));
     $this->assertType('zsRecordBuilder', $r);
   }
   
   /**
-   * @testdox addBuilder()shoudl register the builder
+   * @testdox addArrayBuilder()shoudl register the builder
    */
-  public function addBuilderRegisterTheBuilderInstance()
+  public function addArrayBuilderRegisterTheBuilderInstance()
   {
-    $r = $this->builder->addBuilder(array('name' => 'stephane', 'model' => 'User'));
+    $r = $this->builder->addArrayBuilder(array('name' => 'stephane', 'model' => 'User'));
     $this->assertTrue(in_array($r, $this->builder->getBuilders()));
   }
   
   /**
-   * @testdox after a call to addBuilder(), getBuilder('name') should return the correct instance
+   * @testdox after a call to addArrayBuilder(), getBuilder('name') should return the correct instance
    */
   public function getBuilderReturnTheCorrectBuilder()
   {
-    $r = $this->builder->addBuilder(array('name' => 'stephane', 'model' => 'User'));
+    $r = $this->builder->addArrayBuilder(array('name' => 'stephane', 'model' => 'User'));
     $this->assertEquals($r, $this->builder->getBuilder('stephane'));
   }
   
@@ -104,7 +104,7 @@ class zsRecordBuilderContextTest extends PHPUnit_Framework_TestCase
   public function cleanBuilders()
   {
     foreach (zsRecordBuilderDescriptionProvider::getValidDescriptionsWithAttributes() as $description) {
-      zsRecordBuilderContext::getInstance()->addBuilder($description);
+      zsRecordBuilderContext::getInstance()->addArrayBuilder($description);
     }
     
     zsRecordBuilderContext::getInstance()->cleanBuilders();

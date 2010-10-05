@@ -20,10 +20,48 @@ final class zsRecordBuilderContext
     }
   }
   
-  public function addBuilder (array $description)
+  public function addBuilder()
   {
-    $builder = new zsRecordBuilder($description);
+    $args = func_get_args();
+    
+    switch (count($args)) {
+      case 0:
+      {
+        ;
+        break;
+      }
+      
+      case 1:
+      {
+        ;
+        break;
+      }
+      
+      case 2:
+      {
+        ;
+        break;
+      }
+      
+      default:
+      {
+        ;
+        break;
+      }
+    }
+  }
+  
+  public function addArrayBuilder(array $description)
+  {
+    $builder = new zsArrayRecordBuilder($description);
     $this->builders[$description['name']] = $builder;
+    return $builder;
+  }
+  
+  public function addClosureBuilder($name, Closure $closure)
+  {
+    $builder = new zsClosureRecordBuilder($closure);
+    $this->builders[$name] = $builder;
     return $builder;
   }
 
