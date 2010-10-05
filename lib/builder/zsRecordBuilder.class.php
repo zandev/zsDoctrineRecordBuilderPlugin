@@ -67,6 +67,10 @@ final class zsRecordBuilder
   {
     if(is_array($builder))
     {
+      if(!isset($builder['callback']) && empty($builder['callback']))
+      {
+        throw new InvalidArgumentException('You must provide a valid callback in the options array');
+      }
       $builder = $builder['callback'];
     }
     if(is_callable($builder))

@@ -243,9 +243,9 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
   }
   
   /**
-   * @testdox it should build attributes from a closure
+   * @testdox it should build attributes from a closure given in an array
    */
-  public function itShouldBuildAttributeFromAClosure()
+  public function itShouldBuildAttributeFromAClosureInArray()
   {
     $scope = new stdClass();
     $scope->message = 'I come from a closure\'s return value';
@@ -256,6 +256,28 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
         'firstname' => array('callback' => function(Doctrine_Record $record)use($scope){
           return get_class($record) . '::' . $scope->message;
         }),
+      ),
+    );
+    
+    $builder = new zsRecordBuilder($description);
+    
+    $this->assertEquals('User::' . $scope->message, $builder->build()->firstname);
+  }
+  
+  /**
+   * @testdox it should build attributes from a closure
+   */
+  public function itShouldBuildAttributeFromAClosure()
+  {
+    $scope = new stdClass();
+    $scope->message = 'I come from a closure\'s return value';
+    $description = array(
+      'name' => 'stephanerrichard',
+      'model' => 'User',
+      'attributes' => array(
+        'firstname' => function(Doctrine_Record $record)use($scope){
+          return get_class($record) . '::' . $scope->message;
+        },
       ),
     );
     
@@ -311,9 +333,9 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
   }
   
   /**
-   * @testdox it should build relations from a closure
+   * @testdox it should build relations from a closure given in an array
    */
-  public function isShouldBuildRelationFromACallableClosure()
+  public function isShouldBuildRelationFromACallableClosureInArray()
   {
     $description = array(
       'name' => 'stephanerrichard',
@@ -337,6 +359,56 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
   }
   
   /**
+   * @testdox it should build relations from a closure
+   */
+  public function isShouldBuildRelationFromACallableClosure()
+  {
+    $description = array(
+      'name' => 'stephanerrichard',
+      'model' => 'User',
+      'attributes' => array(
+        'firstname' => 'stephane',
+      ),
+      'relations' => array(
+        'Groups' => array(
+          function(Doctrine_Record $record){
+            $builder = new zsRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'I come from a Closure')));
+            return $builder->build(false);
+          },
+        ),
+      ),
+    );
+    
+    $builder = new zsRecordBuilder($description);
+    
+    $this->assertEquals('I come from a Closure', $builder->build()->Groups->getFirst()->name);
+  }
+  
+  /**
+   * @testdox it should build relations from a zsRecordBuilder instance given in an array
+   */
+  public function isShouldBuildRelationFromAzsRecordBuilderInstanceInArray()
+  {
+    $groupBuilder = new zsRecordBuilder(array('name' => 'admin', 'model' => 'Group', 'attributes' => array('name' => 'I come from a zsRecordBuilder')));
+    $description = array(
+      'name' => 'stephanerrichard',
+      'model' => 'User',
+      'attributes' => array(
+        'firstname' => 'stephane',
+      ),
+      'relations' => array(
+        'Groups' => array(
+          array('callback' => $groupBuilder),
+        ),
+      ),
+    );
+    
+    $builder = new zsRecordBuilder($description);
+    
+    $this->assertEquals('I come from a zsRecordBuilder', $builder->build()->Groups->getFirst()->name);
+  }
+  
+  /**
    * @testdox it should build relations from a zsRecordBuilder instance
    */
   public function isShouldBuildRelationFromAzsRecordBuilderInstance()
@@ -350,7 +422,7 @@ class zsRecordBuilderTest extends PHPUnit_Framework_TestCase
       ),
       'relations' => array(
         'Groups' => array(
-          array('callback' => $groupBuilder),
+          $groupBuilder,
         ),
       ),
     );
