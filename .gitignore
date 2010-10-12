@@ -1,6 +1,7 @@
 .buildpath
 .project
 .settings
+.svn
 report
 test/bootstrap/properties.php
 test/mock/lib/model/base
