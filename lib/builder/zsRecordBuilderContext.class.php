@@ -34,13 +34,17 @@ final class zsRecordBuilderContext
     {
       throw new InvalidArgumentException('addClosureBuilder() options parameter expect at least a name');
     }
-    if(!@$options['model'])
+    if(!@$options['model'] && !@$options['extends'])
     {
       $options['model'] = $options['name'];
     }
     
-    $builder = new zsRecordBuilder($options['model'], $closure);
-    $this->builders[$options['name']] = $builder;
+    $name = $options['name'];
+    unset($options['name']);
+    
+    $builder = new zsRecordBuilder($options, $closure);
+    $this->builders[$name] = $builder;
+    
     return $builder;
   }
 

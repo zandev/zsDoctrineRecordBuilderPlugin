@@ -15,6 +15,7 @@ class zsRecordBuilderContextTest extends PHPUnit_Framework_TestCase
   
   protected function setUp()
   {
+    zsRecordBuilderContext::cleanInstances();
     $this->builder = new zsRecordBuilderContext();
   }
   
@@ -26,20 +27,43 @@ class zsRecordBuilderContextTest extends PHPUnit_Framework_TestCase
     $this->assertNotNull(Doctrine_Core::getPath());
   }
   
+    
   /**
-   * @testdox addBuilder() api example
+   * @testdox getInstance() without any parameters always return the first created instance
    */
-  public function addBuilderAPI()
+  public function getInstanceReturnTheDefaultInstance()
   {
-    $this->builder->addBuilder(array('name' => 'stephane', 'model' => 'User'), function(Doctrine_Record $record){
-        $record->firstname = 'stephane';
-        $record->lastname = 'Richard';
-        $record->password = array('Class', 'method');
-        $record->salt = function(){return uniqid();};
-        $record->group = 'admin'; //Will try to match a builder named admin for the relation 'group'
-        $record->phonenumbers = '00 33 3 67 45 24 33'; // same as $stephane->phonenumers[]->number = '00 33 3 67 45 24 33'
-    });
-    $this->assertTrue(true);
+    $a = zsRecordBuilderContext::getInstance();
+    
+    for ($i = 0; $i < 3; $i++) {
+      $this->assertSame($a, zsRecordBuilderContext::getInstance());
+    }
+  }
+  
+  /**
+   * @testdox the first instanciated object is is always the default one for getInstance()
+   */
+  public function firstInstanceIsAlwaysTheDefault()
+  {
+    $a = new zsRecordBuilderContext();
+    
+    for ($i = 0; $i < 3; $i++) {
+      $b = new zsRecordBuilderContext();
+      $this->assertTrue($a == zsRecordBuilderContext::getInstance());
+    }
+  }
+  
+  /**
+   * @testdox cleanBuilders() remove all registered builders
+   */
+  public function cleanBuilders()
+  {
+    zsRecordBuilderContext::getInstance()->addBuilder('User', function(){});
+    zsRecordBuilderContext::getInstance()->addBuilder('Broup', function(){});
+    
+    zsRecordBuilderContext::getInstance()->cleanBuilders();
+    
+    $this->assertEquals(0, count(zsRecordBuilderContext::getInstance()->getBuilders()));
   }
   
   /**
@@ -61,52 +85,52 @@ class zsRecordBuilderContextTest extends PHPUnit_Framework_TestCase
   }
   
   /**
+   * @testdox addBuilder() with a String return a valid builder
+   */
+  public function addBuilderWithStringReturnAValidBuilder()
+  {
+    $r = $this->builder->addBuilder('User', function(){});
+    $r->build();
+    $this->assertTrue(true);
+  }
+  
+  /**
+   * @testdox addBuilder() with a Hash return a valid builder
+   */
+  public function addBuilderWithHashReturnAValidBuilder()
+  {
+    $r = $this->builder->addBuilder(array('name' => 'stephane', 'model' => 'User'), function(){});
+    $r->build();
+    $this->assertTrue(true);
+  }
+  
+  /**
+   * @testdox addBuilder() with a inheritance return a valid builder
+   */
+  public function addBuilderWithInheritanceReturnAValidBuilder()
+  {
+    $this->builder->addBuilder(array('name' => 'stephane', 'model' => 'User'), function(){});
+    $r = $this->builder->addBuilder(array('name' => 'richard', 'extends' => 'stephane'), function(){});
+    $r->build();
+    $this->assertTrue(true);
+  }
+  
+  /**
+   * @testdox after a call to addBuilder(String), getBuilder('name') should return the correct instance
+   */
+  public function getBuilderWithStringReturnTheCorrectBuilder()
+  {
+    $r = $this->builder->addBuilder('User', function(){});
+    $this->assertEquals($r, $this->builder->getBuilder('User'));
+  }
+  
+  /**
    * @testdox after a call to addBuilder(), getBuilder('name') should return the correct instance
    */
-  public function getBuilderReturnTheCorrectBuilder()
+  public function getBuilderWithHashReturnTheCorrectBuilder()
   {
     $r = $this->builder->addBuilder(array('name' => 'stephane', 'model' => 'User'), function(){});
     $this->assertEquals($r, $this->builder->getBuilder('stephane'));
-  }
-  
-  /**
-   * @testdox getInstance() without any parameters always return the first created instance
-   */
-  public function getInstanceReturnTheDefaultInstance()
-  {
-    zsRecordBuilderContext::cleanInstances();
-    $a = zsRecordBuilderContext::getInstance();
-    
-    for ($i = 0; $i < 3; $i++) {
-    	$this->assertSame($a, zsRecordBuilderContext::getInstance());
-    }
-  }
-  
-  /**
-   * @testdox the first instanciated object is is always the default one for getInstance()
-   */
-  public function firstInstanceIsAlwaysTheDefault()
-  {
-    zsRecordBuilderContext::cleanInstances();
-    $a = new zsRecordBuilderContext();
-    
-    for ($i = 0; $i < 3; $i++) {
-      $b = new zsRecordBuilderContext();
-      $this->assertTrue($a == zsRecordBuilderContext::getInstance());
-    }
-  }
-  
-  /**
-   * @testdox cleanBuilders() remove all registered builders
-   */
-  public function cleanBuilders()
-  {
-    zsRecordBuilderContext::getInstance()->addBuilder('User', function(){});
-    zsRecordBuilderContext::getInstance()->addBuilder('Broup', function(){});
-    
-    zsRecordBuilderContext::getInstance()->cleanBuilders();
-    
-    $this->assertEquals(0, count(zsRecordBuilderContext::getInstance()->getBuilders()));
   }
   
   /**
