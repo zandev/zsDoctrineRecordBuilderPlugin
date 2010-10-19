@@ -6,6 +6,9 @@ It's strongly influenced by [thoughtbot's' factory_girl](http://github.com/thoug
 zsDoctrineRecordBuilderPlugin is in an experimental state, but the code is extremely simple and straightforward and it's quite well test covered.
 So, feel free to fork and contribute.
 
+# TODO
+Add tests covering simple and advanced usages for ::stub(), ::attributes(), and ::create()
+
 # Usage
 
 In file test/bootstrap/unit.php
@@ -43,7 +46,9 @@ A builder can inherit from another:
 
 To build an object with a given factory:
 
-    $record = zs_get_builder('Stéphane')->build();
+    $record = zs_get_builder('Stéphane')->build(); //The record is not yet persisted
+    $record->doSomething();
+    $record->save();
 
 If you want a persisted object:
 
@@ -70,6 +75,12 @@ Dealing with relations is extremely straightforward:
       $user->lastname  = 'Richard';
       $user->groups[]  = zs_get_builder('Group')->build();
     });
+
+
+## And
+That's all
+
+
 
 
 
