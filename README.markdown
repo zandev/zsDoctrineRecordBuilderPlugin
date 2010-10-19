@@ -1,11 +1,13 @@
-# Version 0.1
-zsDoctrineRecordBuilderPlugin is in an extremely experimental state. But the code is extremely simple and straightforward, and it's quite well test covered.
-So, feel free to fork and contribute.
-
 # About
 zsDoctrineRecordBuilderPlugin is a symfony 1.4 plugin, for php > 5.3.x and Doctrine 1.2, which help you to build, create and stub records for testing purpose.
 It's strongly influenced by [thoughtbot's' factory_girl](http://github.com/thoughtbot/factory_girl)
 
+# Version 0.1
+zsDoctrineRecordBuilderPlugin is in an experimental state, but the code is extremely simple and straightforward and it's quite well test covered.
+So, feel free to fork and contribute.
+
+# TODO
+Add tests covering simple and advanced usages for ::stub(), ::attributes(), and ::create()
 
 # Usage
 
@@ -44,7 +46,9 @@ A builder can inherit from another:
 
 To build an object with a given factory:
 
-    $record = zs_get_builder('Stéphane')->build();
+    $record = zs_get_builder('Stéphane')->build(); //The record is not yet persisted
+    $record->doSomething();
+    $record->save();
 
 If you want a persisted object:
 
@@ -71,6 +75,12 @@ Dealing with relations is extremely straightforward:
       $user->lastname  = 'Richard';
       $user->groups[]  = zs_get_builder('Group')->build();
     });
+
+
+## And
+That's all
+
+
 
 
 
